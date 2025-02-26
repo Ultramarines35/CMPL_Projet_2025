@@ -236,7 +236,53 @@ public class PtGen {
 			verifEnt();
 			break;
 		
+		case 3 :
+			po.produire(DIV); break;
 
+		case 4 : 
+			po.produire(MUL); break;
+			
+		case 5 :
+			po.produire(ADD); break;
+
+		case 6 : 
+			po.produire(SOUS); break;
+		
+		case 7:
+			po.produire(EG); break;
+		case 8:
+			po.produire(DIFF); break;
+		case 9:
+			po.produire(SUP); break;
+		case 10 :
+			po.produire(SUPEG); break;
+		case 11 :
+			po.produire(INF); break;
+		case 12 :
+			po.produire(INFEG); break;
+		
+		case 13 :
+			po.produire(AFFECTERG);
+			break;
+		case 14:
+			po.produire(CONTENUG);
+			break;
+		case 15:
+			po.produire(EMPILER);
+			break;
+		case 16 : 
+			po.produire(RESERVER);
+			break;
+		case 17 :
+			po.produire(OU);
+			break;
+		case 18 :
+			po.produire(ET);
+			break;
+		case 19 :
+			po.produire(NON);
+			break;
+		
 		case 255 : 
 			afftabSymb(); // affichage de la table des symboles en fin de compilation
 			break;

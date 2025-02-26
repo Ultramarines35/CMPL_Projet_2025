@@ -153,25 +153,25 @@ exp2  : 'non' exp2
   | exp3  
   ;
   
-exp3  : exp4 
-  ( '='   exp4 
-  | '<>'  exp4 
-  | '>'   exp4 
-  | '>='  exp4 
-  | '<'   exp4 
-  | '<='  exp4  
+exp3  : exp4 {PtGen.pt(2);} 
+  ( '='  exp4 {PtGen.pt(2);}       {PtGen.pt(7);} 
+  | '<>' exp4 {PtGen.pt(2);}      {PtGen.pt(8);} 
+  | '>'  exp4 {PtGen.pt(2);}      {PtGen.pt(9);} 
+  | '>='  exp4 {PtGen.pt(2);}    {PtGen.pt(10);}
+  | '<'   exp4 {PtGen.pt(2);}    {PtGen.pt(11);}
+  | '<='  exp4  {PtGen.pt(2);}   {PtGen.pt(12);}
   ) ?
   ;
   
 exp4  : exp5 
-        ('+'  exp5 
-        |'-'  exp5 
+        ('+' {PtGen.pt(5);} exp5 {PtGen.pt(2);}
+        |'-' {PtGen.pt(6);} exp5 {PtGen.pt(2);}
         )*
   ;
   
 exp5  : primaire 
-        (    '*'   primaire 
-          | 'div'  primaire 
+        (    '*'{PtGen.pt(4);}   primaire {PtGen.pt(2);}
+          | 'div'{PtGen.pt(3);}  primaire {PtGen.pt(2);}
         )*
   ;
   
@@ -180,11 +180,11 @@ primaire: valeur
   | '(' expression ')'
   ;
   
-valeur  : nbentier 
-  | '+' nbentier 
-  | '-' nbentier 
-  | 'vrai' 
-  | 'faux' 
+valeur  : nbentier {PtGen.pt(2) ; }
+  | '+' nbentier {PtGen.pt(2) ; }
+  | '-' nbentier {PtGen.pt(2) ; }
+  | 'vrai' {PtGen.pt(1) ; }
+  | 'faux' {PtGen.pt(1) ; }
   ;
 
 // partie lexicale  : cette partie ne doit pas etre modifiee  //
