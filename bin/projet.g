@@ -40,7 +40,7 @@ unite  :   unitprog {PtGen.pt(255);} EOF
   
 unitprog
   : 'programme' ident ':'  
-     declarations  
+     declarations  {PtGen.pt(8);}
      corps { System.out.println("succes, arret de la compilation "); }
   ;
   
@@ -64,7 +64,7 @@ specif  : ident  ( 'fixe' '(' type  ( ',' type  )* ')' )?
                  ( 'mod'  '(' type  ( ',' type  )* ')' )? 
   ;
   
-consts  : 'const' ( ident  '=' valeur  ptvg  )+ 
+consts  : 'const' ( ident {PtGen.pt(6);}   '=' valeur {PtGen.pt(7);}  ptvg  )+ 
   ;
   
 vars  : 'var' ( type ident  {PtGen.pt(5);}  ( ','  ident {PtGen.pt(5);} )* ptvg  )+
@@ -143,7 +143,7 @@ effixes : '(' (expression  (',' expression  )*)? ')'
 effmods :'(' (ident  (',' ident  )*)? ')'
   ; 
   
-expression: (exp1) ('ou'  exp1  )*
+expression: (exp1) ('ou'  {PtGen.pt(1);} exp1  {PtGen.pt(1);} {PtGen.pt(12);})*
   ;
   
 exp1  : exp2 ('et'  exp2  )*

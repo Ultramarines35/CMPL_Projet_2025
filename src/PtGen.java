@@ -254,47 +254,66 @@ public class PtGen {
 				}
 				break;
 
-			case 6 : //Ajou
+			case 6 : //Actualisation Ident CONST
+				idConst = UtilLex.numIdCourant;
+				break;
+			
+			case 7 :
+				if (presentIdent(UtilLex.numIdCourant) !=0) {
+					UtilLex.messErr("Erreur : Double déclaration de Constante");
+				} 
+				else {
+					placeIdent(idConst, CONSTANTE, tCour, UtilLex.numIdCourant);
+				}
 				break;
 
-		case 13 :
-			po.produire(AFFECTERG);
-			break;
-		case 14:
-			if (presentIdent(UtilLex.numIdCourant) > 0) {
-				//po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
-				if(tabSymb[presentIdent(UtilLex.numIdCourant)].categorie == CONSTANTE){
-					po.produire(EMPILER);
-					po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
-				}
-				else if (tabSymb[presentIdent(UtilLex.numIdCourant)].categorie == VARGLOBALE){
-					po.produire(CONTENUG);
-					po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
-				}
-				else{
-					System.out.println("OUPSI WOUPSI UwU");
-				}
-			} else {
-				System.out.println("OUPSI WOUPSI OwO");
-			}
-			break;
-		case 15:
+			case 8 :
+				po.produire(RESERVER);
+				po.produire(cptVarglobe);
+
+				break;
 			
-			po.produire(EMPILER);
-			po.produire(UtilLex.numIdCourant);
-			break;
+			case 12 : // Empile OU 
+					po.produire(OU);
+					break;
+			case 13 :
+				po.produire(AFFECTERG);
+				break;
+			case 14:
+				if (presentIdent(UtilLex.numIdCourant) > 0) {
+					//po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
+					if(tabSymb[presentIdent(UtilLex.numIdCourant)].categorie == CONSTANTE){
+						po.produire(EMPILER);
+						po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
+					}
+					else if (tabSymb[presentIdent(UtilLex.numIdCourant)].categorie == VARGLOBALE){
+						po.produire(CONTENUG);
+						po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
+					}
+					else{
+						System.out.println("OUPSI WOUPSI UwU");
+					}
+				} else {
+					System.out.println("OUPSI WOUPSI OwO");
+				}
+				break;
+			case 15:
+				
+				po.produire(EMPILER);
+				po.produire(UtilLex.numIdCourant);
+				break;
 
-		
-		case 255 : 
-			afftabSymb(); // affichage de la table des symboles en fin de compilation
-			break;
+			
+			case 255 : 
+				afftabSymb(); // affichage de la table des symboles en fin de compilation
+				break;
 
-		
-		default:
-			System.out.println("Point de generation non prevu dans votre liste");
-			break;
+			
+			default:
+				System.out.println("Point de generation non prevu dans votre liste");
+				break;
 
-		}
+			}
 	}
 }
     
