@@ -154,11 +154,11 @@ exp2  : 'non' exp2
   ;
   
 exp3  : exp4 {PtGen.pt(2);} 
-  ( '='  exp4 {PtGen.pt(2);}       {PtGen.pt(7);} 
-  | '<>' exp4 {PtGen.pt(2);}      {PtGen.pt(8);} 
-  | '>'  exp4 {PtGen.pt(2);}      {PtGen.pt(9);} 
-  | '>='  exp4 {PtGen.pt(2);}    {PtGen.pt(10);}
-  | '<'   exp4 {PtGen.pt(2);}    {PtGen.pt(11);}
+  ( '='  exp4   {PtGen.pt(2);}   {PtGen.pt(7);} 
+  | '<>' exp4   {PtGen.pt(2);}   {PtGen.pt(8);} 
+  | '>'  exp4   {PtGen.pt(2);}   {PtGen.pt(9);} 
+  | '>='  exp4  {PtGen.pt(2);}   {PtGen.pt(10);}
+  | '<'   exp4  {PtGen.pt(2);}   {PtGen.pt(11);}
   | '<='  exp4  {PtGen.pt(2);}   {PtGen.pt(12);}
   ) ?
   ;
