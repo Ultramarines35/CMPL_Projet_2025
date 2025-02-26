@@ -227,7 +227,16 @@ public class PtGen {
 			break;
 		
 		// TODO
-			
+
+		case 1: //Verifier que l element dans la pile est un booleen
+			verifBool();
+			break;
+		
+		case 2 :  // verifier que l element dans la pile est un entier
+			verifEnt();
+			break;
+		
+
 		case 255 : 
 			afftabSymb(); // affichage de la table des symboles en fin de compilation
 			break;
