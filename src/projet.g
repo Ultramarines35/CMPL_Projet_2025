@@ -67,11 +67,11 @@ specif  : ident  ( 'fixe' '(' type  ( ',' type  )* ')' )?
 consts  : 'const' ( ident  '=' valeur  ptvg  )+ 
   ;
   
-vars  : 'var' ( type ident  ( ','  ident  )* ptvg  )+
+vars  : 'var' ( type ident  {PtGen.pt(5);}  ( ','  ident {PtGen.pt(5);} )* ptvg  )+
   ;
   
-type  : 'ent'  
-  |     'bool' 
+type  : 'ent'  {PtGen.pt(3);}  
+  |     'bool' {PtGen.pt(4);}  
   ;
   
 decprocs: (decproc ptvg)+
@@ -149,34 +149,34 @@ expression: (exp1) ('ou'  exp1  )*
 exp1  : exp2 ('et'  exp2  )*
   ;
   
-exp2  : 'non' exp2 
+exp2  : 'non' exp2 {PtGen.pt(1);}
   | exp3  
   ;
   
 exp3  : exp4 {PtGen.pt(2);} 
-  ( '='  exp4   {PtGen.pt(2);}   {PtGen.pt(7);} 
-  | '<>' exp4   {PtGen.pt(2);}   {PtGen.pt(8);} 
-  | '>'  exp4   {PtGen.pt(2);}   {PtGen.pt(9);} 
-  | '>='  exp4  {PtGen.pt(2);}   {PtGen.pt(10);}
-  | '<'   exp4  {PtGen.pt(2);}   {PtGen.pt(11);}
-  | '<='  exp4  {PtGen.pt(2);}   {PtGen.pt(12);}
+  ( '='  exp4   {PtGen.pt(2);}  
+  | '<>' exp4   {PtGen.pt(2);}  
+  | '>'  exp4   {PtGen.pt(2);}  
+  | '>='  exp4  {PtGen.pt(2);}  
+  | '<'   exp4  {PtGen.pt(2);}  
+  | '<='  exp4  {PtGen.pt(2);}  
   ) ?
   ;
   
 exp4  : exp5 
-        ('+' {PtGen.pt(5);} exp5 {PtGen.pt(2);}
-        |'-' {PtGen.pt(6);} exp5 {PtGen.pt(2);}
+        ('+' exp5 {PtGen.pt(2);}
+        |'-' exp5 {PtGen.pt(2);}
         )*
   ;
   
 exp5  : primaire 
-        (    '*'{PtGen.pt(4);}   primaire {PtGen.pt(2);}
-          | 'div'{PtGen.pt(3);}  primaire {PtGen.pt(2);}
+        (    '*' primaire {PtGen.pt(2);}
+          | 'div primaire {PtGen.pt(2);}
         )*
   ;
   
-primaire: valeur 
-  | ident  
+primaire: valeur {PtGen.pt(15) ; }
+  | ident  {PtGen.pt(14) ; }
   | '(' expression ')'
   ;
   

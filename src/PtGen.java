@@ -186,102 +186,104 @@ public class PtGen {
 		System.out.println();
 	}
     
-
-	/**
-	 *  initialisations A COMPLETER SI BESOIN
-	 *  -------------------------------------
-	 */
-	public static void initialisations() {
-	
-		// indices de gestion de la table des symboles
-		it = 0;
-		bc = 1;
+	static int cptVarglobe;
+	static int idConst;
+		/**
+		 *  initialisations A COMPLETER SI BESOIN
+		 *  -------------------------------------
+		 */
+		public static void initialisations() {
 		
-		// pile des reprises pour compilation des branchements en avant
-		pileRep = new TPileRep(); 
-		// programme objet = code Mapile de l'unite en cours de compilation
-		po = new ProgObjet();
-		// COMPILATION SEPAREE: desripteur de l'unite en cours de compilation
-		desc = new Descripteur();
-		
-		// initialisation necessaire aux attributs lexicaux
-		UtilLex.initialisation();
-	
-		// initialisation du type de l'expression courante
-		tCour = NEUTRE;
-
-		//TODO si necessaire
-
-	} // initialisations
-
-	/**
-	 *  code des points de generation A COMPLETER
-	 *  -----------------------------------------
-	 * @param numGen : numero du point de generation a executer
-	 */
-	public static void pt(int numGen) {
-	
-		switch (numGen) {
-		case 0:
-			initialisations();
-			break;
-		
-		// TODO
-
-		case 1: //Verifier que l element dans la pile est un booleen
-			verifBool();
-			break;
-		
-		case 2 :  // verifier que l element dans la pile est un entier
-			verifEnt();
-			break;
-		
-		case 3 :
-			po.produire(DIV); break;
-
-		case 4 : 
-			po.produire(MUL); break;
+			// indices de gestion de la table des symboles
+			it = 0;
+			bc = 1;
 			
-		case 5 :
-			po.produire(ADD); break;
+			// pile des reprises pour compilation des branchements en avant
+			pileRep = new TPileRep(); 
+			// programme objet = code Mapile de l'unite en cours de compilation
+			po = new ProgObjet();
+			// COMPILATION SEPAREE: desripteur de l'unite en cours de compilation
+			desc = new Descripteur();
+			
+			// initialisation necessaire aux attributs lexicaux
+			UtilLex.initialisation();
+		
+			// initialisation du type de l'expression courante
+			tCour = NEUTRE;
+	
+			//TODO si necessaire
+			cptVarglobe = 0;
+	
+		} // initialisations
+	
+		/**
+		 *  code des points de generation A COMPLETER
+		 *  -----------------------------------------
+		 * @param numGen : numero du point de generation a executer
+		 */
+		public static void pt(int numGen) {
+		
+			switch (numGen) {
+			case 0:
+				initialisations();
+				break;
+			
+			// TODO
+	
+			case 1: //Verifier que l element dans la pile est un booleen
+				verifBool();
+				break;
+			
+			case 2 :  // verifier que l element dans la pile est un entier
+				verifEnt();
+				break;
+			
+			case 3 : // Modification de type : ENT
+				tCour = ENT; break;
+	
+			case 4 : // Modification de type : BOOL
+				tCour = BOOL; break;
+	
+			case 5 : // Ajout TabSymb VARGLOB 
+				
+				if (presentIdent(UtilLex.numIdCourant) !=0) {
+					UtilLex.messErr("Erreur : Double déclaration de variable");
+				} else {
+					placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, cptVarglobe);
+					cptVarglobe++;
+				}
+				break;
 
-		case 6 : 
-			po.produire(SOUS); break;
-		
-		case 7:
-			po.produire(EG); break;
-		case 8:
-			po.produire(DIFF); break;
-		case 9:
-			po.produire(SUP); break;
-		case 10 :
-			po.produire(SUPEG); break;
-		case 11 :
-			po.produire(INF); break;
-		case 12 :
-			po.produire(INFEG); break;
-		
+			case 6 : //Ajou
+				break;
+
 		case 13 :
 			po.produire(AFFECTERG);
 			break;
 		case 14:
-			po.produire(CONTENUG);
+			if (presentIdent(UtilLex.numIdCourant) > 0) {
+				//po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
+				if(tabSymb[presentIdent(UtilLex.numIdCourant)].categorie == CONSTANTE){
+					po.produire(EMPILER);
+					po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
+				}
+				else if (tabSymb[presentIdent(UtilLex.numIdCourant)].categorie == VARGLOBALE){
+					po.produire(CONTENUG);
+					po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
+				}
+				else{
+					System.out.println("OUPSI WOUPSI UwU");
+				}
+			} else {
+				System.out.println("OUPSI WOUPSI OwO");
+			}
 			break;
 		case 15:
+			
 			po.produire(EMPILER);
+			po.produire(UtilLex.numIdCourant);
 			break;
-		case 16 : 
-			po.produire(RESERVER);
-			break;
-		case 17 :
-			po.produire(OU);
-			break;
-		case 18 :
-			po.produire(ET);
-			break;
-		case 19 :
-			po.produire(NON);
-			break;
+
 		
 		case 255 : 
 			afftabSymb(); // affichage de la table des symboles en fin de compilation
