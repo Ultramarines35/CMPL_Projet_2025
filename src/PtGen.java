@@ -189,6 +189,7 @@ public class PtGen {
 	static int cptVarglobe;
 	static int idConst;
 	static int tConst;
+	static int ident_tmp;
 		/**
 		 *  initialisations A COMPLETER SI BESOIN
 		 *  -------------------------------------
@@ -262,36 +263,54 @@ public class PtGen {
 				idConst = UtilLex.numIdCourant;
 				break;
 			
-			case 7 :
+			case 7 : // Ajout TabSymb CONST
 				if (presentIdent(idConst) !=0) {
 					UtilLex.messErr("Erreur : Double déclaration de Constante");
 				}
 				else {
 					placeIdent(idConst, CONSTANTE, tCour, vCour);
-	//				if(tCour == ENT){
-	//					
-	//				}
-	//				else if (tCour == BOOL) {
-	//					
-	//				}
-	//				else{
-	//					UtilLex.messErr("Constante Invalide");
-	//				}
-	//					
 				}
 				break;
 				
 			
-			case 8 :
+			case 8 : //lecture d'une valeur entière positive ou une valeur booléene
 				vCour = UtilLex.valEnt;
 			break;
 
-			case 9 :
+			case 9 : //lecture d'un entier négatif
 				vCour = UtilLex.valEnt*(-1);
 			break;
+
+			case 10 : //lecture d'un entier négatif
+				po.produire(RESERVER);
+				po.produire(cptVarglobe);
+				System.out.println(cptVarglobe);
+			break;
+
+			case 11 : //lecture d'un ident
+				ident_tmp = presentIdent(bc);
+				if(ident_tmp != 0){
+					if(tabSymb[ident_tmp].categorie == VARGLOBALE){
+						po.produire(CONTENUG);
+
+					}
+					else if(tabSymb[ident_tmp].categorie == CONSTANTE){
+						po.produire(EMPILER);
+					}
+					else{
+						UtilLex.messErr("Erreur de type de Ident : "+tabSymb[ident_tmp].categorie);
+					}
+					po.produire(tabSymb[ident_tmp].info);
+					tCour = tabSymb[ident_tmp].type;
+				}
+				else{
+					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
+				}
+			break;
+
 			case 12 : // Empile OU 
 					po.produire(OU);
-					break;
+			break;
 			case 13 :
 				po.produire(AFFECTERG);
 				break;
@@ -318,7 +337,28 @@ public class PtGen {
 				po.produire(EMPILER);
 				po.produire(UtilLex.numIdCourant);
 				break;
+			
+			case 16 :
+				ident_tmp = presentIdent(bc);
+				if(ident_tmp != 0){
+					if(tabSymb[ident_tmp].categorie == VARGLOBALE){
+						po.produire(CONTENUG);
 
+					}
+					else if(tabSymb[ident_tmp].categorie == CONSTANTE){
+						po.produire(EMPILER);
+					}
+					else{
+						UtilLex.messErr("Erreur de type de Ident : "+tabSymb[ident_tmp].categorie);
+					}
+					po.produire(tabSymb[ident_tmp].info);
+					tCour = tabSymb[ident_tmp].type;
+				}
+				else{
+					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
+				}
+				po.produire(LIRENT);
+				break;
 			
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
