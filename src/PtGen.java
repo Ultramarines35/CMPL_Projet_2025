@@ -188,6 +188,7 @@ public class PtGen {
     
 	static int cptVarglobe;
 	static int idConst;
+	static int tConst;
 		/**
 		 *  initialisations A COMPLETER SI BESOIN
 		 *  -------------------------------------
@@ -210,10 +211,10 @@ public class PtGen {
 		
 			// initialisation du type de l'expression courante
 			tCour = NEUTRE;
-	
+			tConst = NEUTRE;
 			//TODO si necessaire
 			cptVarglobe = 0;
-	
+			
 		} // initialisations
 	
 		/**
@@ -251,7 +252,6 @@ public class PtGen {
 	
 			case 5 : // Ajout TabSymb VARGLOB
 				int tmp_ident = UtilLex.numIdCourant;
-				System.out.println(tmp_ident);
 				if (presentIdent(tmp_ident) !=0) {
 					UtilLex.messErr("Erreur : Double déclaration de variable");
 				} else {
@@ -265,20 +265,30 @@ public class PtGen {
 				break;
 			
 			case 7 :
-				if (presentIdent(UtilLex.numIdCourant) !=0) {
+				if (presentIdent(idConst) !=0) {
 					UtilLex.messErr("Erreur : Double déclaration de Constante");
-				} 
+				}
 				else {
-					placeIdent(idConst, CONSTANTE, tCour, UtilLex.numIdCourant);
+					placeIdent(idConst, CONSTANTE, tCour, vCour);
+						
 				}
 				break;
-
-			case 8 :
-				po.produire(RESERVER);
-				po.produire(cptVarglobe);
-
-				break;
+				
 			
+			case 8 :
+				tCour = ENT;
+				vCour = UtilLex.numIdCourant;
+			break;
+
+			case 9 :
+				tCour = ENT;
+				vCour = UtilLex.numIdCourant*(-1);
+			break;
+
+			case 10 :
+			tCour = BOOL;
+			vCour = UtilLex.numIdCourant;
+			break;
 			case 12 : // Empile OU 
 					po.produire(OU);
 					break;
