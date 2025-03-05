@@ -117,7 +117,7 @@ public class PtGen {
     // -------------------------
     
  // MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
-    public static String trinome="XxxYyyZzz"; 	//TODO 
+    public static String trinome="DELAPART Jules RECIPON Pierre SINSEAU Ronald"; 	//TODO 
     
     private static int tCour; // type de l'expression compilee
     private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
@@ -239,17 +239,23 @@ public class PtGen {
 				break;
 			
 			case 3 : // Modification de type : ENT
-				tCour = ENT; break;
+				
+				tCour = ENT; 
+				System.out.println(tCour);
+				break;
 	
 			case 4 : // Modification de type : BOOL
-				tCour = BOOL; break;
+				tCour = BOOL; 
+				System.out.println(tCour);
+				break;
 	
-			case 5 : // Ajout TabSymb VARGLOB 
-				
-				if (presentIdent(UtilLex.numIdCourant) !=0) {
+			case 5 : // Ajout TabSymb VARGLOB
+				int tmp_ident = UtilLex.numIdCourant;
+				System.out.println(tmp_ident);
+				if (presentIdent(tmp_ident) !=0) {
 					UtilLex.messErr("Erreur : Double déclaration de variable");
 				} else {
-					placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, cptVarglobe);
+					placeIdent(tmp_ident, VARGLOBALE, tCour, cptVarglobe);
 					cptVarglobe++;
 				}
 				break;

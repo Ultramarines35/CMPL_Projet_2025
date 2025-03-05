@@ -40,7 +40,7 @@ unite  :   unitprog {PtGen.pt(255);} EOF
   
 unitprog
   : 'programme' ident ':'  
-     declarations  {PtGen.pt(8);}
+     declarations  
      corps { System.out.println("succes, arret de la compilation "); }
   ;
   
@@ -64,14 +64,14 @@ specif  : ident  ( 'fixe' '(' type  ( ',' type  )* ')' )?
                  ( 'mod'  '(' type  ( ',' type  )* ')' )? 
   ;
   
-consts  : 'const' ( ident {PtGen.pt(6);}   '=' valeur {PtGen.pt(7);}  ptvg  )+ 
+consts  : 'const' ( ident {PtGen.pt(6);} '=' valeur {PtGen.pt(7);} ptvg  )+ 
   ;
   
-vars  : 'var' ( type ident  {PtGen.pt(5);}  ( ','  ident {PtGen.pt(5);} )* ptvg  )+
+vars  : 'var' ( type ident {PtGen.pt(5);} ( ','  ident ident {PtGen.pt(5);} )* ptvg  )+
   ;
   
-type  : 'ent'  {PtGen.pt(3);}  
-  |     'bool' {PtGen.pt(4);}  
+type  : 'ent'  {PtGen.pt(3);}
+  |     'bool' {PtGen.pt(4);}
   ;
   
 decprocs: (decproc ptvg)+
@@ -143,48 +143,48 @@ effixes : '(' (expression  (',' expression  )*)? ')'
 effmods :'(' (ident  (',' ident  )*)? ')'
   ; 
   
-expression: (exp1) ('ou'  {PtGen.pt(1);} exp1  {PtGen.pt(1);} {PtGen.pt(12);})*
+expression: (exp1) ('ou'  exp1  )*
   ;
   
 exp1  : exp2 ('et'  exp2  )*
   ;
   
-exp2  : 'non' exp2 {PtGen.pt(1);}
+exp2  : 'non' exp2 
   | exp3  
   ;
   
-exp3  : exp4 {PtGen.pt(2);} 
-  ( '='  exp4   {PtGen.pt(2);}  
-  | '<>' exp4   {PtGen.pt(2);}  
-  | '>'  exp4   {PtGen.pt(2);}  
-  | '>='  exp4  {PtGen.pt(2);}  
-  | '<'   exp4  {PtGen.pt(2);}  
-  | '<='  exp4  {PtGen.pt(2);}  
+exp3  : exp4 
+  ( '='   exp4 
+  | '<>'  exp4 
+  | '>'   exp4 
+  | '>='  exp4 
+  | '<'   exp4 
+  | '<='  exp4  
   ) ?
   ;
   
 exp4  : exp5 
-        ('+' exp5 {PtGen.pt(2);}
-        |'-' exp5 {PtGen.pt(2);}
+        ('+'  exp5 
+        |'-'  exp5 
         )*
   ;
   
 exp5  : primaire 
-        (    '*' primaire {PtGen.pt(2);}
-          | 'div primaire {PtGen.pt(2);}
+        (    '*'   primaire 
+          | 'div'  primaire 
         )*
   ;
   
-primaire: valeur {PtGen.pt(15) ; }
-  | ident  {PtGen.pt(14) ; }
+primaire: valeur 
+  | ident  
   | '(' expression ')'
   ;
   
-valeur  : nbentier {PtGen.pt(2) ; }
-  | '+' nbentier {PtGen.pt(2) ; }
-  | '-' nbentier {PtGen.pt(2) ; }
-  | 'vrai' {PtGen.pt(1) ; }
-  | 'faux' {PtGen.pt(1) ; }
+valeur  : nbentier 
+  | '+' nbentier 
+  | '-' nbentier 
+  | 'vrai' 
+  | 'faux' 
   ;
 
 // partie lexicale  : cette partie ne doit pas etre modifiee  //
