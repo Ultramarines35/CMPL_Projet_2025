@@ -1,0 +1,11 @@
+FICHIER TestsProjet\polyP18-exemple1ChapIII.gen : 
+
+   1  reserver        2
+   3  lirent    
+   4  affecterg       0
+   6  lirent    
+   7  affecterg       1
+   9  contenug        0
+  11  empiler        10
+  13  contenug        1
+  15  contenug        0

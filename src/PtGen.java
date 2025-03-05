@@ -338,30 +338,41 @@ public class PtGen {
 				po.produire(UtilLex.numIdCourant);
 				break;
 			
-			case 16 :
+			case 16 : // Production lirent/lirebool (lire)
+				vCour = UtilLex.numIdCourant;
 				ident_tmp = presentIdent(bc);
 				if(ident_tmp != 0){
-					if(tabSymb[ident_tmp].categorie == VARGLOBALE){
-						po.produire(CONTENUG);
+					if(tabSymb[ident_tmp].categorie == VARGLOBALE)
+					{ // Nous devons differencier entre lirent et lirebool
+						if (tabSymb[ident_tmp].type == ENT) {
+							po.produire(LIRENT);
+							po.produire(AFFECTERG);
+							po.produire(tabSymb[ident_tmp].info);
+						}
+						else if (tabSymb[ident_tmp].type == BOOL) {
+							po.produire(LIREBOOL);
+							po.produire(AFFECTERG);
+							po.produire(tabSymb[ident_tmp].info);
+						}
+						else UtilLex.messErr("Erreur : Type de donnée lu inconnu");
 
+					} else{
+						UtilLex.messErr("Erreur : (lire) lecture de CONST impossible");
 					}
-					else if(tabSymb[ident_tmp].categorie == CONSTANTE){
-						po.produire(EMPILER);
-					}
-					else{
-						UtilLex.messErr("Erreur de type de Ident : "+tabSymb[ident_tmp].categorie);
-					}
-					po.produire(tabSymb[ident_tmp].info);
+				
 					tCour = tabSymb[ident_tmp].type;
 				}
 				else{
 					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
 				}
-				po.produire(LIRENT);
 				break;
+
 			
+		
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
+				po.constGen();
+
 				break;
 
 			

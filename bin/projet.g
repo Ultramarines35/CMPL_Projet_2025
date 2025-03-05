@@ -125,7 +125,7 @@ inscond : 'cond'  expression  ':' instructions
 boucle  : 'ttq'  expression 'faire' instructions 'fait' 
   ;
   
-lecture: 'lire' '('  ident {PtGen.pt(16);} ( ','   ident {PtGen.pt(16);} )* ')' 
+lecture: 'lire' '(' ident {PtGen.pt(16);} ( ',' ident {PtGen.pt(16);} )* ')' 
   ;
   
 ecriture: 'ecrire' '(' expression  ( ',' expression  )* ')'
