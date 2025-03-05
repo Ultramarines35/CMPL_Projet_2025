@@ -180,11 +180,11 @@ primaire: valeur
   | '(' expression ')'
   ;
   
-valeur  : nbentier {PtGen.pt(8);}
-  | '+' nbentier {PtGen.pt(8);}
-  | '-' nbentier {PtGen.pt(9);}
-  | 'vrai' {PtGen.pt(10);}
-  | 'faux' {PtGen.pt(10);}
+valeur  : nbentier {PtGen.pt(3);} {PtGen.pt(8);}
+  | '+' nbentier {PtGen.pt(3);} {PtGen.pt(8);}
+  | '-' nbentier {PtGen.pt(3);} {PtGen.pt(9);}
+  | 'vrai' {PtGen.pt(4);} {PtGen.pt(8);}
+  | 'faux' {PtGen.pt(4);} {PtGen.pt(8);}
   ;
 
 // partie lexicale  : cette partie ne doit pas etre modifiee  //

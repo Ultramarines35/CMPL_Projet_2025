@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 projet.g 2025-03-05 12:53:02
+// $ANTLR 3.5.2 projet.g 2025-03-05 15:42:10
            
 import java.io.IOException;
 import java.io.DataInputStream;
@@ -2422,43 +2422,48 @@ public class projetParser extends Parser {
 					nbentier();
 					state._fsp--;
 
+					PtGen.pt(3);
 					PtGen.pt(8);
 					}
 					break;
 				case 2 :
 					// projet.g:184:5: '+' nbentier
 					{
-					match(input,13,FOLLOW_13_in_valeur1339); 
-					pushFollow(FOLLOW_nbentier_in_valeur1341);
+					match(input,13,FOLLOW_13_in_valeur1341); 
+					pushFollow(FOLLOW_nbentier_in_valeur1343);
 					nbentier();
 					state._fsp--;
 
+					PtGen.pt(3);
 					PtGen.pt(8);
 					}
 					break;
 				case 3 :
 					// projet.g:185:5: '-' nbentier
 					{
-					match(input,15,FOLLOW_15_in_valeur1349); 
-					pushFollow(FOLLOW_nbentier_in_valeur1351);
+					match(input,15,FOLLOW_15_in_valeur1353); 
+					pushFollow(FOLLOW_nbentier_in_valeur1355);
 					nbentier();
 					state._fsp--;
 
+					PtGen.pt(3);
 					PtGen.pt(9);
 					}
 					break;
 				case 4 :
 					// projet.g:186:5: 'vrai'
 					{
-					match(input,55,FOLLOW_55_in_valeur1359); 
-					PtGen.pt(10);
+					match(input,55,FOLLOW_55_in_valeur1365); 
+					PtGen.pt(4);
+					PtGen.pt(8);
 					}
 					break;
 				case 5 :
 					// projet.g:187:5: 'faux'
 					{
-					match(input,38,FOLLOW_38_in_valeur1367); 
-					PtGen.pt(10);
+					match(input,38,FOLLOW_38_in_valeur1375); 
+					PtGen.pt(4);
+					PtGen.pt(8);
 					}
 					break;
 
@@ -2483,7 +2488,7 @@ public class projetParser extends Parser {
 			// projet.g:197:11: ( INT )
 			// projet.g:197:15: INT
 			{
-			INT1=(Token)match(input,INT,FOLLOW_INT_in_nbentier1397); 
+			INT1=(Token)match(input,INT,FOLLOW_INT_in_nbentier1407); 
 			 UtilLex.valEnt = Integer.parseInt((INT1!=null?INT1.getText():null));
 			}
 
@@ -2507,7 +2512,7 @@ public class projetParser extends Parser {
 			// projet.g:199:7: ( ID )
 			// projet.g:199:9: ID
 			{
-			ID2=(Token)match(input,ID,FOLLOW_ID_in_ident1408); 
+			ID2=(Token)match(input,ID,FOLLOW_ID_in_ident1418); 
 			 UtilLex.traiterId((ID2!=null?ID2.getText():null)); 
 			}
 
@@ -2708,12 +2713,12 @@ public class projetParser extends Parser {
 	public static final BitSet FOLLOW_expression_in_primaire1315 = new BitSet(new long[]{0x0000000000000800L});
 	public static final BitSet FOLLOW_11_in_primaire1317 = new BitSet(new long[]{0x0000000000000002L});
 	public static final BitSet FOLLOW_nbentier_in_valeur1331 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_13_in_valeur1339 = new BitSet(new long[]{0x0000000000000040L});
-	public static final BitSet FOLLOW_nbentier_in_valeur1341 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_15_in_valeur1349 = new BitSet(new long[]{0x0000000000000040L});
-	public static final BitSet FOLLOW_nbentier_in_valeur1351 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_55_in_valeur1359 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_38_in_valeur1367 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_INT_in_nbentier1397 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_ID_in_ident1408 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_13_in_valeur1341 = new BitSet(new long[]{0x0000000000000040L});
+	public static final BitSet FOLLOW_nbentier_in_valeur1343 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_15_in_valeur1353 = new BitSet(new long[]{0x0000000000000040L});
+	public static final BitSet FOLLOW_nbentier_in_valeur1355 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_55_in_valeur1365 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_38_in_valeur1375 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_INT_in_nbentier1407 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_ID_in_ident1418 = new BitSet(new long[]{0x0000000000000002L});
 }

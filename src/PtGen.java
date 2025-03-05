@@ -242,12 +242,10 @@ public class PtGen {
 			case 3 : // Modification de type : ENT
 				
 				tCour = ENT; 
-				System.out.println(tCour);
 				break;
 	
 			case 4 : // Modification de type : BOOL
 				tCour = BOOL; 
-				System.out.println(tCour);
 				break;
 	
 			case 5 : // Ajout TabSymb VARGLOB
@@ -270,24 +268,26 @@ public class PtGen {
 				}
 				else {
 					placeIdent(idConst, CONSTANTE, tCour, vCour);
-						
+	//				if(tCour == ENT){
+	//					
+	//				}
+	//				else if (tCour == BOOL) {
+	//					
+	//				}
+	//				else{
+	//					UtilLex.messErr("Constante Invalide");
+	//				}
+	//					
 				}
 				break;
 				
 			
 			case 8 :
-				tCour = ENT;
-				vCour = UtilLex.numIdCourant;
+				vCour = UtilLex.valEnt;
 			break;
 
 			case 9 :
-				tCour = ENT;
-				vCour = UtilLex.numIdCourant*(-1);
-			break;
-
-			case 10 :
-			tCour = BOOL;
-			vCour = UtilLex.numIdCourant;
+				vCour = UtilLex.valEnt*(-1);
 			break;
 			case 12 : // Empile OU 
 					po.produire(OU);
