@@ -189,7 +189,9 @@ public class PtGen {
 	static int cptVarglobe;
 	static int idConst;
 	static int tConst;
+	static int vCour2;
 	static int ident_tmp;
+	static boolean reserver;
 		/**
 		 *  initialisations A COMPLETER SI BESOIN
 		 *  -------------------------------------
@@ -199,7 +201,7 @@ public class PtGen {
 			// indices de gestion de la table des symboles
 			it = 0;
 			bc = 1;
-			
+			vCour2 = 0;
 			// pile des reprises pour compilation des branchements en avant
 			pileRep = new TPileRep(); 
 			// programme objet = code Mapile de l'unite en cours de compilation
@@ -215,6 +217,7 @@ public class PtGen {
 			tConst = NEUTRE;
 			//TODO si necessaire
 			cptVarglobe = 0;
+			reserver = false;
 			
 		} // initialisations
 	
@@ -242,7 +245,7 @@ public class PtGen {
 			
 			case 3 : // Modification de type : ENT
 				
-				tCour = ENT; 
+				tCour = ENT;
 				break;
 	
 			case 4 : // Modification de type : BOOL
@@ -275,13 +278,13 @@ public class PtGen {
 			
 			case 8 : //lecture d'une valeur entière positive ou une valeur booléene
 				vCour = UtilLex.valEnt;
-			break;
+				break;
 
 			case 9 : //lecture d'un entier négatif
 				vCour = UtilLex.valEnt*(-1);
 			break;
 
-			case 10 : //lecture d'un entier négatif
+			case 10 : //Reservation des Variables globales
 				po.produire(RESERVER);
 				po.produire(cptVarglobe);
 				System.out.println(cptVarglobe);
@@ -300,45 +303,24 @@ public class PtGen {
 					else{
 						UtilLex.messErr("Erreur de type de Ident : "+tabSymb[ident_tmp].categorie);
 					}
-					po.produire(tabSymb[ident_tmp].info);
-					tCour = tabSymb[ident_tmp].type;
+					if(tabSymb[ident_tmp].type == ENT){
+						tCour = ENT;
+					}
+					else if(tabSymb[ident_tmp].type == BOOL){
+						tCour = BOOL;
+					}
+					else{
+						UtilLex.messErr("Erreur de type de Ident : Type interdit");
+					}
+					vCour = tabSymb[ident_tmp].info;
+					po.produire(vCour);
 				}
 				else{
 					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
 				}
 			break;
-
-			case 12 : // Empile OU 
-					po.produire(OU);
-			break;
-			case 13 :
-				po.produire(AFFECTERG);
-				break;
-			case 14:
-				if (presentIdent(UtilLex.numIdCourant) > 0) {
-					//po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
-					if(tabSymb[presentIdent(UtilLex.numIdCourant)].categorie == CONSTANTE){
-						po.produire(EMPILER);
-						po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
-					}
-					else if (tabSymb[presentIdent(UtilLex.numIdCourant)].categorie == VARGLOBALE){
-						po.produire(CONTENUG);
-						po.produire(tabSymb[presentIdent(UtilLex.numIdCourant)].info);
-					}
-					else{
-						System.out.println("OUPSI WOUPSI UwU");
-					}
-				} else {
-					System.out.println("OUPSI WOUPSI OwO");
-				}
-				break;
-			case 15:
-				
-				po.produire(EMPILER);
-				po.produire(UtilLex.numIdCourant);
-				break;
 			
-			case 16 : // Production lirent/lirebool (lire)
+			case 12 : // Production lirent/lirebool (lire)
 				vCour = UtilLex.numIdCourant;
 				ident_tmp = presentIdent(bc);
 				if(ident_tmp != 0){
@@ -366,9 +348,33 @@ public class PtGen {
 					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
 				}
 				break;
-
 			
+			case 13 : //Empiler ident 
+				// checker si pas constante et ils sont de meme type
+				ident_tmp = presentIdent(bc);
+				if (ident_tmp != 0) {
+					if(tabSymb[ident_tmp].categorie == VARGLOBALE) {
+						tCour = tabSymb[ident_tmp].type;
+						po.produire(AFFECTERG);
+						po.produire(tabSymb[ident_tmp].info);
+					}
+					else{
+						UtilLex.messErr("Erreur : ident n'est pas une variable");
+					}
+				}
+				else {
+					UtilLex.messErr("Erreur : ident n'est pas dans la table");
+				}
+				break;
 		
+			case 14 :
+				vCour = UtilLex.numIdCourant;
+				ident_tmp = presentIdent(bc);
+				if (ident_tmp != 0) {
+					
+				}
+				break;
+
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
 				po.constGen();

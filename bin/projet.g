@@ -50,7 +50,7 @@ unitmodule
   ;
   
 declarations
-  : partiedef? partieref? consts? vars? {PtGen.pt(10);} decprocs? 
+  : partiedef? partieref? consts? vars? {PtGen.pt(10);} decprocs?
   ;
   
 partiedef
@@ -125,14 +125,14 @@ inscond : 'cond'  expression  ':' instructions
 boucle  : 'ttq'  expression 'faire' instructions 'fait' 
   ;
   
-lecture: 'lire' '(' ident {PtGen.pt(16);} ( ',' ident {PtGen.pt(16);} )* ')' 
+lecture: 'lire' '(' ident {PtGen.pt(12);} ( ',' ident {PtGen.pt(12);} )* ')' 
   ;
   
 ecriture: 'ecrire' '(' expression  ( ',' expression  )* ')'
    ;
   
 affouappel
-  : ident  (    ':=' expression 
+  : ident {PtGen.pt(13);} (    ':='  expression {PtGen.pt(14);}
             |   (effixes (effmods)?)?  
            )
   ;
