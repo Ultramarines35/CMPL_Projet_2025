@@ -277,11 +277,26 @@ public class PtGen {
 				
 			
 			case 8 : //lecture d'une valeur entière positive ou une valeur booléene
+			if(reserver){
 				vCour = UtilLex.valEnt;
+				po.produire(EMPILER);
+				po.produire(vCour);
+			}
+			else{
+				vCour = UtilLex.valEnt;
+			}	
+				
 				break;
 
 			case 9 : //lecture d'un entier négatif
+			if(reserver){
 				vCour = UtilLex.valEnt*(-1);
+				po.produire(EMPILER);
+				po.produire(vCour);
+			}
+			else{
+				vCour = UtilLex.valEnt;
+			}	
 			break;
 
 			case 10 : //Reservation des Variables globales
@@ -374,6 +389,73 @@ public class PtGen {
 					
 				}
 				break;
+
+			case 15 : 
+			po.produire(EG);
+			tCour = BOOL;
+			break;
+
+			case 16 : 
+			po.produire(DIFF);
+			tCour = BOOL;
+			break;
+
+			case 17 : 
+			po.produire(SUP);
+			tCour = BOOL;
+			break;
+
+			case 18 : 
+			po.produire(SUPEG);
+			tCour = BOOL;
+			break;
+
+			case 19 : 
+			po.produire(INF);
+			tCour = BOOL;
+			break;
+
+			case 20 : 
+			po.produire(INFEG);
+			tCour = BOOL;
+			break;
+
+			case 21 : 
+			reserver = true;
+			break;
+
+			case 22 : 
+			po.produire(ADD);
+			tCour = ENT;
+			break;
+
+			case 23 : 
+			po.produire(SOUS);
+			tCour = ENT;
+			break;
+
+			case 24 : 
+			po.produire(MUL);
+			tCour = ENT;
+			break;
+
+			case 25 : 
+			if(vCour == 0){
+				UtilLex.messErr("Erreur : Division par 0 interdite");
+			}
+			else{
+				verifEnt();
+			}
+			break;
+
+			case 26 : 
+			po.produire(DIV);
+			tCour = ENT;
+			break;
+			
+
+
+			
 
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation

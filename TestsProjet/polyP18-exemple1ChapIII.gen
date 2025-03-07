@@ -6,6 +6,9 @@ FICHIER TestsProjet\polyP18-exemple1ChapIII.gen :
    6  lirent    
    7  affecterg       1
    9  contenug        0
-  11  empiler        10
-  13  contenug        1
-  15  contenug        0
+  11  empiler         0
+  13  eg        
+  14  affecterg       0
+  16  empiler        10
+  18  contenug        1
+  20  contenug        0

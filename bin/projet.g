@@ -50,7 +50,7 @@ unitmodule
   ;
   
 declarations
-  : partiedef? partieref? consts? vars? {PtGen.pt(10);} decprocs?
+  : partiedef? partieref? consts? vars? {PtGen.pt(10);} decprocs? {PtGen.pt(21);}
   ;
   
 partiedef
@@ -153,25 +153,25 @@ exp2  : 'non' exp2
   | exp3  
   ;
   
-exp3  : exp4 
-  ( '='   exp4 
-  | '<>'  exp4 
-  | '>'   exp4 
-  | '>='  exp4 
-  | '<'   exp4 
-  | '<='  exp4  
+exp3  : exp4 {PtGen.pt(2);}
+  ( '='   exp4 {PtGen.pt(2);} {PtGen.pt(15);}
+  | '<>'  exp4 {PtGen.pt(2);} {PtGen.pt(16);}
+  | '>'   exp4 {PtGen.pt(2);} {PtGen.pt(17);}
+  | '>='  exp4 {PtGen.pt(2);} {PtGen.pt(18);}
+  | '<'   exp4 {PtGen.pt(2);} {PtGen.pt(19);}
+  | '<='  exp4 {PtGen.pt(2);} {PtGen.pt(20);}
   ) ?
   ;
   
-exp4  : exp5 
-        ('+'  exp5 
-        |'-'  exp5 
+exp4  : exp5 {PtGen.pt(2);} 
+        ('+'  exp5 {PtGen.pt(2);} {PtGen.pt(22);}
+        |'-'  exp5 {PtGen.pt(2);} {PtGen.pt(23);}
         )*
   ;
   
-exp5  : primaire 
-        (    '*'   primaire 
-          | 'div'  primaire 
+exp5  : primaire {PtGen.pt(2);}
+        (    '*'   primaire {PtGen.pt(2);} {PtGen.pt(24);}
+          | 'div'   primaire {PtGen.pt(25);} {PtGen.pt(26);}
         )*
   ;
   
