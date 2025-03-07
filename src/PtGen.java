@@ -189,8 +189,8 @@ public class PtGen {
 	static int cptVarglobe;
 	static int idConst;
 	static int tConst;
-	static int vCour2;
 	static int ident_tmp;
+	static int val_tmp;
 	static boolean reserver;
 		/**
 		 *  initialisations A COMPLETER SI BESOIN
@@ -201,7 +201,6 @@ public class PtGen {
 			// indices de gestion de la table des symboles
 			it = 0;
 			bc = 1;
-			vCour2 = 0;
 			// pile des reprises pour compilation des branchements en avant
 			pileRep = new TPileRep(); 
 			// programme objet = code Mapile de l'unite en cours de compilation
@@ -327,8 +326,8 @@ public class PtGen {
 					else{
 						UtilLex.messErr("Erreur de type de Ident : Type interdit");
 					}
-					vCour = tabSymb[ident_tmp].info;
-					po.produire(vCour);
+					ident_tmp = tabSymb[ident_tmp].info;
+					po.produire(ident_tmp);
 				}
 				else{
 					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
@@ -336,7 +335,6 @@ public class PtGen {
 			break;
 			
 			case 12 : // Production lirent/lirebool (lire)
-				vCour = UtilLex.numIdCourant;
 				ident_tmp = presentIdent(bc);
 				if(ident_tmp != 0){
 					if(tabSymb[ident_tmp].categorie == VARGLOBALE)
@@ -383,7 +381,6 @@ public class PtGen {
 				break;
 		
 			case 14 :
-				vCour = UtilLex.numIdCourant;
 				ident_tmp = presentIdent(bc);
 				if (ident_tmp != 0) {
 					
@@ -440,17 +437,33 @@ public class PtGen {
 			break;
 
 			case 25 : 
-			if(vCour == 0){
-				UtilLex.messErr("Erreur : Division par 0 interdite");
-			}
-			else{
-				verifEnt();
-			}
+		//	if(vCour == 0){
+		//		UtilLex.messErr("Erreur : Division par 0 interdite");
+		//	}
+		//	else{
+		//		verifEnt();
+		//	}
+			verifEnt();
 			break;
 
 			case 26 : 
 			po.produire(DIV);
 			tCour = ENT;
+			break;
+
+			case 27 : 
+			po.produire(OU);
+			tCour = BOOL;
+			break;
+
+			case 28 : 
+			po.produire(ET);
+			tCour = BOOL;
+			break;
+
+			case 29 : 
+			po.produire(NON);
+			tCour = BOOL;
 			break;
 			
 
