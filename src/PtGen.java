@@ -190,6 +190,7 @@ public class PtGen {
 	static int idConst;
 	static int tConst;
 	static int ident_tmp;
+	static int affect_ident_tmp;
 	static int val_tmp;
 	static boolean reserver;
 		/**
@@ -301,7 +302,6 @@ public class PtGen {
 			case 10 : //Reservation des Variables globales
 				po.produire(RESERVER);
 				po.produire(cptVarglobe);
-				System.out.println(cptVarglobe);
 			break;
 
 			case 11 : //lecture d'un ident
@@ -362,14 +362,12 @@ public class PtGen {
 				}
 				break;
 			
-			case 13 : //Empiler ident 
+			case 13 : //Empiler ident pour l'affectation
 				// checker si pas constante et ils sont de meme type
-				ident_tmp = presentIdent(bc);
-				if (ident_tmp != 0) {
-					if(tabSymb[ident_tmp].categorie == VARGLOBALE) {
-						tCour = tabSymb[ident_tmp].type;
-						po.produire(AFFECTERG);
-						po.produire(tabSymb[ident_tmp].info);
+				affect_ident_tmp = presentIdent(bc);
+				if (affect_ident_tmp != 0) {
+					if(tabSymb[affect_ident_tmp].categorie == VARGLOBALE) {
+						tCour = tabSymb[affect_ident_tmp].type;
 					}
 					else{
 						UtilLex.messErr("Erreur : ident n'est pas une variable");
@@ -381,10 +379,11 @@ public class PtGen {
 				break;
 		
 			case 14 :
-				ident_tmp = presentIdent(bc);
-				if (ident_tmp != 0) {
-					
-				}
+				affect_ident_tmp = presentIdent(bc);
+				po.produire(AFFECTERG);
+				po.produire(tabSymb[affect_ident_tmp].info);
+				System.out.println( ident_tmp);
+				System.out.println( tabSymb[affect_ident_tmp].info);
 				break;
 
 			case 15 : 
