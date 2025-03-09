@@ -277,32 +277,32 @@ public class PtGen {
 				
 			
 			case 8 : //lecture d'une valeur entière positive ou une valeur booléene
-			if(reserver){
-				vCour = UtilLex.valEnt;
-				po.produire(EMPILER);
-				po.produire(vCour);
-			}
-			else{
-				vCour = UtilLex.valEnt;
-			}	
+				if(reserver){
+					vCour = UtilLex.valEnt;
+					po.produire(EMPILER);
+					po.produire(vCour);
+				}
+				else{
+					vCour = UtilLex.valEnt;
+				}	
 				
 				break;
 
 			case 9 : //lecture d'un entier négatif
-			if(reserver){
-				vCour = UtilLex.valEnt*(-1);
-				po.produire(EMPILER);
-				po.produire(vCour);
-			}
-			else{
-				vCour = UtilLex.valEnt;
-			}	
-			break;
+				if(reserver){
+					vCour = UtilLex.valEnt*(-1);
+					po.produire(EMPILER);
+					po.produire(vCour);
+				}
+				else{
+					vCour = UtilLex.valEnt*(-1);
+				}	
+				break;
 
 			case 10 : //Reservation des Variables globales
 				po.produire(RESERVER);
 				po.produire(cptVarglobe);
-			break;
+				break;
 
 			case 11 : //lecture d'un ident
 				ident_tmp = presentIdent(bc);
@@ -335,27 +335,12 @@ public class PtGen {
 			break;
 			
 			case 12 : // Production lirent/lirebool (lire)
-				ident_tmp = presentIdent(bc);
-				if(ident_tmp != 0){
-					if(tabSymb[ident_tmp].categorie == VARGLOBALE)
-					{ // Nous devons differencier entre lirent et lirebool
-						if (tabSymb[ident_tmp].type == ENT) {
-							po.produire(LIRENT);
-							po.produire(AFFECTERG);
-							po.produire(tabSymb[ident_tmp].info);
-						}
-						else if (tabSymb[ident_tmp].type == BOOL) {
-							po.produire(LIREBOOL);
-							po.produire(AFFECTERG);
-							po.produire(tabSymb[ident_tmp].info);
-						}
-						else UtilLex.messErr("Erreur : Type de donnée lu inconnu");
+				if(tCour == BOOL){
+					po.produire(ECRBOOL);
+				}
+				else if(tCour == ENT){
+					po.produire(ECRENT);
 
-					} else{
-						UtilLex.messErr("Erreur : (lire) lecture de CONST impossible");
-					}
-				
-					tCour = tabSymb[ident_tmp].type;
 				}
 				else{
 					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
@@ -379,7 +364,6 @@ public class PtGen {
 				break;
 		
 			case 14 :
-				affect_ident_tmp = presentIdent(bc);
 				po.produire(AFFECTERG);
 				po.produire(tabSymb[affect_ident_tmp].info);
 				System.out.println( ident_tmp);
@@ -387,84 +371,109 @@ public class PtGen {
 				break;
 
 			case 15 : 
-			po.produire(EG);
-			tCour = BOOL;
-			break;
+				po.produire(EG);
+				tCour = BOOL;
+				break;
 
 			case 16 : 
-			po.produire(DIFF);
-			tCour = BOOL;
-			break;
+				po.produire(DIFF);
+				tCour = BOOL;
+				break;
 
 			case 17 : 
-			po.produire(SUP);
-			tCour = BOOL;
-			break;
+				po.produire(SUP);
+				tCour = BOOL;
+				break;
 
 			case 18 : 
-			po.produire(SUPEG);
-			tCour = BOOL;
-			break;
+				po.produire(SUPEG);
+				tCour = BOOL;
+				break;
 
 			case 19 : 
-			po.produire(INF);
-			tCour = BOOL;
-			break;
+				po.produire(INF);
+				tCour = BOOL;
+				break;
 
 			case 20 : 
-			po.produire(INFEG);
-			tCour = BOOL;
-			break;
+				po.produire(INFEG);
+				tCour = BOOL;
+				break;
 
 			case 21 : 
-			reserver = true;
-			break;
+				reserver = true;
+				break;
 
 			case 22 : 
-			po.produire(ADD);
-			tCour = ENT;
-			break;
+				po.produire(ADD);
+				tCour = ENT;
+				break;
 
 			case 23 : 
-			po.produire(SOUS);
-			tCour = ENT;
-			break;
+				po.produire(SOUS);
+				tCour = ENT;
+				break;
 
 			case 24 : 
-			po.produire(MUL);
-			tCour = ENT;
-			break;
+				po.produire(MUL);
+				tCour = ENT;
+				break;
 
-			case 25 : 
-			if(vCour == 0){
-				UtilLex.messErr("Erreur : Division par 0 interdite");
-			}
-		//	else{
-		//		verifEnt();
-		//	}
-			verifEnt();
-			break;
+			case 25 :
+				if(vCour == 0){
+					System.out.println("Division par 0 ! ");
+					//UtilLex.messErr("Erreur : Division par 0 interdite");
+				}
+				verifEnt();
+				break;
 
 			case 26 : 
-			po.produire(DIV);
-			tCour = ENT;
-			break;
+				po.produire(DIV);
+				tCour = ENT;
+				break;
 
 			case 27 : 
-			po.produire(OU);
-			tCour = BOOL;
-			break;
+				po.produire(OU);
+				tCour = BOOL;
+				break;
 
 			case 28 : 
-			po.produire(ET);
-			tCour = BOOL;
-			break;
+				po.produire(ET);
+				tCour = BOOL;
+				break;
 
 			case 29 : 
-			po.produire(NON);
-			tCour = BOOL;
-			break;
+				po.produire(NON);
+				tCour = BOOL;
+				break;
 			
+			case 30:
+				ident_tmp = presentIdent(bc);
+				if(ident_tmp != 0){
+					if(tabSymb[ident_tmp].categorie == VARGLOBALE)
+					{ // Nous devons differencier entre lirent et lirebool
+						if (tabSymb[ident_tmp].type == ENT) {
+							po.produire(LIRENT);
+							po.produire(AFFECTERG);
+							po.produire(tabSymb[ident_tmp].info);
+						}
+						else if (tabSymb[ident_tmp].type == BOOL) {
+							po.produire(LIREBOOL);
+							po.produire(AFFECTERG);
+							po.produire(tabSymb[ident_tmp].info);
+						}
+						else UtilLex.messErr("Erreur : Type de donnée lu inconnu");	
+
+					} else{
+						UtilLex.messErr("Erreur : (lire) lecture de CONST impossible");
+					}
+				
+					tCour = tabSymb[ident_tmp].type;
+				}
+				else{
+					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
+				}
+				break;
 
 
 			

@@ -128,7 +128,7 @@ boucle  : 'ttq'  expression 'faire' instructions 'fait'
 lecture: 'lire' '(' ident {PtGen.pt(12);} ( ',' ident {PtGen.pt(12);} )* ')' 
   ;
   
-ecriture: 'ecrire' '(' expression  ( ',' expression  )* ')'
+ecriture: 'ecrire' '(' expression {PtGen.pt(12);} ( ',' expression {PtGen.pt(12);} )* ')'
    ;
   
 affouappel

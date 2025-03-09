@@ -9,7 +9,7 @@ FICHIER TestsProjet\polyP18-exemple1ChapIII.gen :
   11  empiler         0
   13  eg        
   14  empiler        10
-  16  affecterg      10
+  16  affecterg       0
   18  contenug        1
   20  contenug        0
   22  div       
