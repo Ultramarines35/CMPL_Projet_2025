@@ -1,9 +1,9 @@
 programme self_test :
 const m=0;
-var ent n;
+var ent n,j ;
 debut
      lire(n);
-	 n:= n div m
+	 j:= j div m
 
     
 fin
