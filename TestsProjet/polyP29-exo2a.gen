@@ -1,0 +1,34 @@
+FICHIER TestsProjet\polyP29-exo2a.gen : 
+
+   1  reserver        3
+   3  affecterg       0
+   5  empiler         0
+   7  affecterg       1
+   9  empiler         0
+  11  lirent    
+  12  affecterg       2
+  14  contenug        2
+  16  empiler        -1
+  18  diff      
+  19  contenug        2
+  21  empiler         0
+  23  supeg     
+  24  contenug        2
+  26  empiler        20
+  28  infeg     
+  29  et        
+  30  contenug        2
+  32  empiler        10
+  34  inf       
+  35  affecterg       0
+  37  contenug        0
+  39  empiler         1
+  41  add       
+  42  affecterg       1
+  44  contenug        1
+  46  empiler         1
+  48  add       
+  49  lirent    
+  50  affecterg       2
+  52  contenug        0
+  54  contenug        1

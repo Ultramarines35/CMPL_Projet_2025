@@ -436,9 +436,9 @@ public class PtGen {
 			break;
 
 			case 25 : 
-		//	if(vCour == 0){
-		//		UtilLex.messErr("Erreur : Division par 0 interdite");
-		//	}
+			if(vCour == 0){
+				UtilLex.messErr("Erreur : Division par 0 interdite");
+			}
 		//	else{
 		//		verifEnt();
 		//	}
