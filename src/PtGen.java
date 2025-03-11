@@ -475,8 +475,14 @@ public class PtGen {
 				}
 				break;
 
-
+			case 31 : // Empiler pilerep debut cond
+				verifBool();
+				po.produire(BSIFAUX );
+				po.produire(0 ); //a modif
+				pileRep.empiler(po.getIpo());
 			
+			case 32 : // Dépiler pilerep fin cond
+				po.modifier(pileRep.depiler(), po.getIpo() + 1);
 
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
