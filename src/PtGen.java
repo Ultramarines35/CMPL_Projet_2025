@@ -484,6 +484,11 @@ public class PtGen {
 			case 32 : // Dépiler pilerep fin cond
 				po.modifier(pileRep.depiler(), po.getIpo() + 1);
 				break;
+			
+			case 33: 
+				
+				po.produire(BINCOND);
+				break;
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
 				po.constGen();
