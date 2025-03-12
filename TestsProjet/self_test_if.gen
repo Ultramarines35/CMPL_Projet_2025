@@ -2,13 +2,15 @@ FICHIER TestsProjet\self_test_if.gen :
 
    1  reserver        2
    3  contenug        0
-   5  empiler         0
+   5  empiler         5
    7  eg        
-   8  empiler         0
-  10  affecterg       0
-  12  empiler         0
-  14  empiler         5
-  16  add       
-  17  affecterg       0
-  19  contenug        0
-  21  ecrent    
+   8  bsifaux        16
+  10  empiler        10
+  12  affecterg       0
+  14  bincond        23
+  16  empiler        10
+  18  empiler         5
+  20  add       
+  21  affecterg       0
+  23  contenug        0
+  25  ecrent    

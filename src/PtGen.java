@@ -475,20 +475,37 @@ public class PtGen {
 				}
 				break;
 
-			case 31 : // Empiler pilerep debut cond
+			case 31 : // Début Si :  mettre bsifaux + empiler pile rep
 				verifBool();
-				po.produire(BSIFAUX );
-				po.produire(0 ); //a modif
+				po.produire(BSIFAUX); po.produire(0);
 				pileRep.empiler(po.getIpo());
 				break;
-			case 32 : // Dépiler pilerep fin cond
+			
+			case 32 : // Avant instr sinon
+				po.produire(BINCOND); po.produire(0);
+				int tmp = po.getIpo();
 				po.modifier(pileRep.depiler(), po.getIpo() + 1);
+				pileRep.empiler(tmp);
 				break;
 			
-			case 33: 
-				
-				po.produire(BINCOND);
+			case 33 : // Résout bincond si y'a alors, sinon résout bsifaux
+				po.modifier(pileRep.depiler(), po.getIpo() + 1);
 				break;
+
+			// case 31 : // Empiler pilerep debut cond
+			// 	verifBool();
+			// 	po.produire(BSIFAUX );
+			// 	po.produire(0 ); //a modif
+			// 	pileRep.empiler(po.getIpo());
+			// 	break;
+			// case 32 : // Dépiler pilerep fin cond
+			// 	po.modifier(pileRep.depiler(), po.getIpo() + 1);
+			// 	break;
+			
+			// case 33: 
+				
+			// 	po.produire(BINCOND);
+			// 	break;
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
 				po.constGen();
