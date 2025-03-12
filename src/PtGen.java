@@ -193,6 +193,7 @@ public class PtGen {
 	static int affect_ident_tmp;
 	static int val_tmp;
 	static boolean reserver;
+	static int tmp_boucle;
 		/**
 		 *  initialisations A COMPLETER SI BESOIN
 		 *  -------------------------------------
@@ -491,21 +492,20 @@ public class PtGen {
 			case 33 : // Résout bincond si y'a alors, sinon résout bsifaux
 				po.modifier(pileRep.depiler(), po.getIpo() + 1);
 				break;
-
-			// case 31 : // Empiler pilerep debut cond
-			// 	verifBool();
-			// 	po.produire(BSIFAUX );
-			// 	po.produire(0 ); //a modif
-			// 	pileRep.empiler(po.getIpo());
-			// 	break;
-			// case 32 : // Dépiler pilerep fin cond
-			// 	po.modifier(pileRep.depiler(), po.getIpo() + 1);
-			// 	break;
 			
-			// case 33: 
+			case 34 :
+				verifBool();
+				po.produire(BSIFAUX); po.produire(0);
+				pileRep.empiler(po.getIpo());
 				
-			// 	po.produire(BINCOND);
-			// 	break;
+				break;
+
+			case 35 :
+				tmp_boucle = pileRep.depiler();
+				po.produire(BINCOND); po.produire(tmp_boucle-1);
+				po.modifier(tmp_boucle, po.getIpo() +1);
+				break;
+
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
 				po.constGen();
