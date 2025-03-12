@@ -480,10 +480,10 @@ public class PtGen {
 				po.produire(BSIFAUX );
 				po.produire(0 ); //a modif
 				pileRep.empiler(po.getIpo());
-			
+				break;
 			case 32 : // Dépiler pilerep fin cond
 				po.modifier(pileRep.depiler(), po.getIpo() + 1);
-
+				break;
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
 				po.constGen();
