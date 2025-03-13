@@ -1,15 +1,15 @@
 FICHIER TestsProjet\polyP18-exemple1ChapIII.gen : 
 
    1  reserver        2
-   3  lirent    
-   4  affecterg       0
-   6  lirent    
-   7  affecterg       1
-   9  contenug        0
-  11  empiler         0
-  13  eg        
-  14  empiler        10
-  16  affecterg       0
-  18  contenug        1
-  20  contenug        0
-  22  div       
+   3  ecrent    
+   4  ecrent    
+   5  contenug        0
+   7  empiler         0
+   9  eg        
+  10  bsifaux        16
+  12  empiler        10
+  14  affecterg       0
+  16  contenug        1
+  18  contenug        0
+  20  div       
+  21  ecrent    

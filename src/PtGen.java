@@ -367,8 +367,6 @@ public class PtGen {
 			case 14 :
 				po.produire(AFFECTERG);
 				po.produire(tabSymb[affect_ident_tmp].info);
-				System.out.println( ident_tmp);
-				System.out.println( tabSymb[affect_ident_tmp].info);
 				break;
 
 			case 15 : 
@@ -477,7 +475,6 @@ public class PtGen {
 				break;
 
 			case 31 : // Début Si :  mettre bsifaux + empiler pile rep
-				verifBool();
 				po.produire(BSIFAUX); po.produire(0);
 				pileRep.empiler(po.getIpo());
 				break;
@@ -494,7 +491,6 @@ public class PtGen {
 				break;
 			
 			case 34 :
-				verifBool();
 				po.produire(BSIFAUX); po.produire(0);
 				pileRep.empiler(po.getIpo());
 				
@@ -505,6 +501,37 @@ public class PtGen {
 				po.produire(BINCOND); po.produire(tmp_boucle-1);
 				po.modifier(tmp_boucle, po.getIpo() +1);
 				break;
+
+
+			//36 - 39 COND ne fonctionne pas, mais on est sur la bonne voie
+			//case 36 :
+			//	pileRep.empiler(0);
+			//	break;	
+			//case 37 :// Cas BSIFAUX, on empile l'adresse dans la pile et on produit un bsifaux 0
+			//	po.produire(BSIFAUX); po.produire(0);
+			//	pileRep.empiler(po.getIpo());
+			//break;
+		
+			//case 38 :// Cas BINCOND, on relie le nouveau BINCOND à l'adresse de l'ancien BINCOND
+			//	po.modifier(pileRep.depiler(), po.getIpo());
+			//	po.produire(BINCOND);
+			//	po.produire(pileRep.depiler());
+			//break;
+			
+
+			//case 39 :
+			//	int adresse = pileRep.depiler();
+			//	while (adresse != 0){
+			//		po.modifier(adresse, po.getIpo() +1);
+			//		adresse = po.getElt(adresse);
+			//	}
+			//	if (adresse == 0) {
+			//		po.modifier(adresse, po.getIpo() +1);
+			//		adresse = po.getElt(adresse);
+			//	}
+			//break;
+
+
 
 			case 255 : 
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
