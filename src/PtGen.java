@@ -117,7 +117,7 @@ public class PtGen {
     // -------------------------
     
  // MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
-    public static String trinome="DELAPART Jules RECIPON Pierre SINSEAU Ronald"; 	//TODO 
+    public static String trinome="DELAPART Jules RECIPON Pierre"; 	//TODO 
     
     private static int tCour; // type de l'expression compilee
     private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
@@ -278,32 +278,17 @@ public class PtGen {
 				
 			
 			case 8 : //lecture d'une valeur entière positive ou une valeur booléene
-				if(reserver){
-					vCour = UtilLex.valEnt;
-					po.produire(EMPILER);
-					po.produire(vCour);
-				}
-				else{
-					vCour = UtilLex.valEnt;
-				}	
-				
-				break;
+				vCour = UtilLex.valEnt;
+			break;
 
 			case 9 : //lecture d'un entier négatif
-				if(reserver){
-					vCour = UtilLex.valEnt*(-1);
-					po.produire(EMPILER);
-					po.produire(vCour);
-				}
-				else{
-					vCour = UtilLex.valEnt*(-1);
-				}	
-				break;
+				vCour = UtilLex.valEnt*(-1);
+			break;
 
 			case 10 : //Reservation des Variables globales
 				po.produire(RESERVER);
 				po.produire(cptVarglobe);
-				break;
+			break;
 
 			case 11 : //lecture d'un ident
 				ident_tmp = presentIdent(bc);
@@ -408,40 +393,36 @@ public class PtGen {
 				tCour = ENT;
 				break;
 
-			case 23 : 
+			case 23: 
 				po.produire(SOUS);
 				tCour = ENT;
 				break;
 
-			case 24 : 
+			case 24: 
 				po.produire(MUL);
 				tCour = ENT;
 				break;
 
-			case 25 :
-				if(vCour == 0){
-					System.out.println("Division par 0 ! ");
-					//UtilLex.messErr("Erreur : Division par 0 interdite");
-				}
+			case 25:
 				verifEnt();
 				break;
 
-			case 26 : 
+			case 26: 
 				po.produire(DIV);
 				tCour = ENT;
 				break;
 
-			case 27 : 
+			case 27: 
 				po.produire(OU);
 				tCour = BOOL;
 				break;
 
-			case 28 : 
+			case 28: 
 				po.produire(ET);
 				tCour = BOOL;
 				break;
 
-			case 29 : 
+			case 29: 
 				po.produire(NON);
 				tCour = BOOL;
 				break;
@@ -474,29 +455,29 @@ public class PtGen {
 				}
 				break;
 
-			case 31 : // Début Si :  mettre bsifaux + empiler pile rep
+			case 31: // Début Si :  mettre bsifaux + empiler pile rep
 				po.produire(BSIFAUX); po.produire(0);
 				pileRep.empiler(po.getIpo());
 				break;
 			
-			case 32 : // Avant instr sinon
+			case 32: // Avant instr sinon
 				po.produire(BINCOND); po.produire(0);
 				int tmp = po.getIpo();
 				po.modifier(pileRep.depiler(), po.getIpo() + 1);
 				pileRep.empiler(tmp);
 				break;
 			
-			case 33 : // Résout bincond si y'a alors, sinon résout bsifaux
+			case 33: // Résout bincond si y'a alors, sinon résout bsifaux
 				po.modifier(pileRep.depiler(), po.getIpo() + 1);
 				break;
 			
-			case 34 :
+			case 34:
 				po.produire(BSIFAUX); po.produire(0);
 				pileRep.empiler(po.getIpo());
 				
 				break;
 
-			case 35 :
+			case 35:
 				tmp_boucle = pileRep.depiler();
 				po.produire(BINCOND); po.produire(tmp_boucle-1);
 				po.modifier(tmp_boucle, po.getIpo() +1);
@@ -504,33 +485,51 @@ public class PtGen {
 
 
 			//36 - 39 COND ne fonctionne pas, mais on est sur la bonne voie
-			//case 36 :
-			//	pileRep.empiler(0);
-			//	break;	
-			//case 37 :// Cas BSIFAUX, on empile l'adresse dans la pile et on produit un bsifaux 0
-			//	po.produire(BSIFAUX); po.produire(0);
-			//	pileRep.empiler(po.getIpo());
-			//break;
-		
-			//case 38 :// Cas BINCOND, on relie le nouveau BINCOND à l'adresse de l'ancien BINCOND
-			//	po.modifier(pileRep.depiler(), po.getIpo());
-			//	po.produire(BINCOND);
-			//	po.produire(pileRep.depiler());
-			//break;
+			case 36:
+				verifBool(); 
+				pileRep.empiler(0);
+				break;
+
+			case 37:// Cas BINCOND, on relie le nouveau BINCOND à l'adresse de l'ancien BINCOND
+				int ad1 = pileRep.depiler();
+				int ad2 = pileRep.depiler();
+				po.produire(BINCOND); po.produire(ad2);
+				pileRep.empiler(po.getIpo());
+				po.produire(BSIFAUX); po.produire(0);
+				pileRep.empiler(po.getIpo());
+				po.modifier(ad1, po.getIpo()+1);
+			break;
 			
 
-			//case 39 :
-			//	int adresse = pileRep.depiler();
-			//	while (adresse != 0){
-			//		po.modifier(adresse, po.getIpo() +1);
-			//		adresse = po.getElt(adresse);
-			//	}
-			//	if (adresse == 0) {
-			//		po.modifier(adresse, po.getIpo() +1);
-			//		adresse = po.getElt(adresse);
-			//	}
-			//break;
+			case 38:
+				po.modifier(pileRep.depiler(), po.getIpo()+1);
+			break;
 
+			case 39:
+				po.modifier(pileRep.depiler(), po.getIpo()+1);
+			break;
+
+			case 40:
+				int ad = pileRep.depiler();
+				int ad_temp = po.getElt(ad);
+				while (ad_temp != 0){
+					ad = ad_temp;
+					ad_temp = po.getElt(ad);
+				}
+				po.modifier(ad, po.getIpo());
+			
+
+			break;
+			
+			case 41 :
+				vCour = UtilLex.valEnt;
+				po.produire(EMPILER);
+				po.produire(vCour);
+			break;
+
+			case 42 :
+				po.produire(ARRET);
+			break;
 
 
 			case 255 : 
