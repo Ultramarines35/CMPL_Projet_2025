@@ -484,41 +484,31 @@ public class PtGen {
 				break;
 
 
-			//36 - 39 COND ne fonctionne pas, mais on est sur la bonne voie
+			//36 - 39 COND
 			case 36:
-				verifBool(); 
 				pileRep.empiler(0);
 				break;
 
 			case 37:// Cas BINCOND, on relie le nouveau BINCOND à l'adresse de l'ancien BINCOND
-				int ad1 = pileRep.depiler();
-				int ad2 = pileRep.depiler();
-				po.produire(BINCOND); po.produire(ad2);
-				pileRep.empiler(po.getIpo());
-				po.produire(BSIFAUX); po.produire(0);
-				pileRep.empiler(po.getIpo());
-				po.modifier(ad1, po.getIpo()+1);
+				po.produire(BINCOND);
+            	po.modifier(pileRep.depiler(), po.getIpo() + 2);
+            	po.produire(pileRep.depiler());
+            	pileRep.empiler(po.getIpo());
 			break;
 			
 
 			case 38:
-				po.modifier(pileRep.depiler(), po.getIpo()+1);
-			break;
+				po.modifier(pileRep.depiler(), po.getIpo() + 1);
+            break;
 
 			case 39:
-				po.modifier(pileRep.depiler(), po.getIpo()+1);
-			break;
-
-			case 40:
-				int ad = pileRep.depiler();
-				int ad_temp = po.getElt(ad);
-				while (ad_temp != 0){
-					ad = ad_temp;
-					ad_temp = po.getElt(ad);
-				}
-				po.modifier(ad, po.getIpo());
-			
-
+				int ad_temp = pileRep.depiler();
+            	System.out.println(ad_temp);
+            	while (ad_temp != 0) {
+            	    int temp = po.getElt(ad_temp);
+            	    po.modifier(ad_temp, po.getIpo() + 1);
+					ad_temp = temp;
+            	}
 			break;
 			
 			case 41 :

@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 projet.g 2025-03-24 10:10:09
+// $ANTLR 3.5.2 projet.g 2025-03-27 13:35:54
            
 import java.io.IOException;
 import java.io.DataInputStream;
@@ -1514,7 +1514,7 @@ public class projetParser extends Parser {
 					// projet.g:121:12: 'aut' instructions
 					{
 					match(input,26,FOLLOW_26_in_inscond798); 
-					PtGen.pt(38);
+					PtGen.pt(37);
 					pushFollow(FOLLOW_instructions_in_inscond802);
 					instructions();
 					state._fsp--;
@@ -1531,7 +1531,7 @@ public class projetParser extends Parser {
 			}
 
 			match(input,39,FOLLOW_39_in_inscond821); 
-			PtGen.pt(40);
+			PtGen.pt(39);
 			}
 
 		}
