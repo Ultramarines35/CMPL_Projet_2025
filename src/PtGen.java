@@ -518,8 +518,24 @@ public class PtGen {
 			break;
 
 			case 42 :
+				ident_tmp = presentIdent(bc);
+				if(ident_tmp != 0){
+					if(tabSymb[ident_tmp].categorie != PROC){
+						placeIdent(vCour, PROC, NEUTRE, 0); //Tochange later :  first time seen
+						placeIdent(-1, PRIVEE, NEUTRE, 0); //Tochange later :  fnumber of parfixe + parmode
+					}
+					else {
+						UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
+					}
+				}
+			break;
+			
+			
+			case 254 :
 				po.produire(ARRET);
 			break;
+
+			
 
 
 			case 255 : 

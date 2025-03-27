@@ -77,17 +77,17 @@ type  : 'ent'  {PtGen.pt(3);}
 decprocs: (decproc ptvg)+
   ;
   
-decproc :  'proc'  ident  parfixe? parmod? consts? vars? corps 
+decproc :  'proc'   ident {PtGen.pt(42);}  parfixe? parmod? consts? vars? corps 
   ;
   
 ptvg  : ';'
   | 
   ;
   
-corps : 'debut' instructions 'fin' {PtGen.pt(42);}
+corps : 'debut' instructions 'fin' {PtGen.pt(254);}
   ;
   
-parfixe: 'fixe' '(' pf ( ';' pf)* ')'
+parfixe: 'fixe' '(' pf  {PtGen.pt(43);}  ( ';' pf  {PtGen.pt(43);} )* ')'
   ;
   
 pf  : type ident  ( ',' ident  )*  
