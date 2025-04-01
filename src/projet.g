@@ -87,16 +87,16 @@ ptvg  : ';'
 corps : 'debut' instructions 'fin' {PtGen.pt(254);}
   ;
   
-parfixe: 'fixe' '(' pf  {PtGen.pt(43);}  ( ';' pf  {PtGen.pt(43);} )* ')'
+parfixe: 'fixe' '(' pf ( ';' pf )* ')'
   ;
   
-pf  : type ident  ( ',' ident  )*  
+pf  : type ident {PtGen.pt(43);} ( ',' ident {PtGen.pt(43);} )*  
   ;
 
-parmod  : 'mod' '(' pm ( ';' pm)* ')'
+parmod  : 'mod'  '(' pm  ( ';' pm  )* ')'
   ;
   
-pm  : type ident  ( ',' ident  )*
+pm  : type ident  {PtGen.pt(44);} ( ',' ident {PtGen.pt(44);} )*
   ;
   
 instructions

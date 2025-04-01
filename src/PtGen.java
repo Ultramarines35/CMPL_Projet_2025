@@ -186,7 +186,7 @@ public class PtGen {
 		System.out.println();
 	}
     
-	static int cptVarglobe;
+	static int compteurVar;
 	static int idConst;
 	static int tConst;
 	static int ident_tmp;
@@ -217,7 +217,8 @@ public class PtGen {
 			tCour = NEUTRE;
 			tConst = NEUTRE;
 			//TODO si necessaire
-			cptVarglobe = 0;
+			compteurVar = 0;
+			compteurVar = 0;
 			reserver = false;
 			
 		} // initialisations
@@ -258,8 +259,8 @@ public class PtGen {
 				if (presentIdent(tmp_ident) !=0) {
 					UtilLex.messErr("Erreur : Double déclaration de variable");
 				} else {
-					placeIdent(tmp_ident, VARGLOBALE, tCour, cptVarglobe);
-					cptVarglobe++;
+					placeIdent(tmp_ident, VARGLOBALE, tCour, compteurVar);
+					compteurVar++;
 				}
 				break;
 
@@ -287,7 +288,7 @@ public class PtGen {
 
 			case 10 : //Reservation des Variables globales
 				po.produire(RESERVER);
-				po.produire(cptVarglobe);
+				po.produire(compteurVar);
 			break;
 
 			case 11 : //lecture d'un ident
@@ -519,18 +520,52 @@ public class PtGen {
 
 			case 42 :
 				ident_tmp = presentIdent(bc);
+				compteurVar = 0;
 				if(ident_tmp != 0){
 					if(tabSymb[ident_tmp].categorie != PROC){
-						placeIdent(vCour, PROC, NEUTRE, 0); //Tochange later :  first time seen
+						placeIdent(tabSymb[ident_tmp].code, PROC, NEUTRE, 0); //Tochange later :  first time seen
 						placeIdent(-1, PRIVEE, NEUTRE, 0); //Tochange later :  fnumber of parfixe + parmode
 					}
 					else {
 						UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 					}
+				} else {
+					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
 			break;
 			
-			
+			case 43 :
+				ident_tmp = presentIdent(bc);
+				if(ident_tmp != 0){
+					if(tabSymb[ident_tmp].categorie != PARAMFIXE) {
+						placeIdent(tabSymb[ident_tmp].code, PARAMFIXE, vCour, compteurVar);
+					} else {
+						UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
+					}
+					
+				} else {
+					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
+				}
+				compteurVar++;
+			break;
+
+			case 44 : 
+				ident_tmp = presentIdent(bc);
+				if(ident_tmp != 0){
+					if(tabSymb[ident_tmp].categorie != PARAMFIXE) {
+						placeIdent(tabSymb[ident_tmp].code, PARAMMOD, vCour, compteurVar);
+					} else {
+						UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
+					}
+					
+				} else {
+					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
+				}
+				compteurVar++;
+			break;
+			case 45 :
+
+			break;
 			case 254 :
 				po.produire(ARRET);
 			break;
