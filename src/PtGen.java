@@ -254,26 +254,41 @@ public class PtGen {
 				tCour = BOOL; 
 				break;
 	
-			case 5 : // Ajout TabSymb VARGLOB
-				int tmp_ident = UtilLex.numIdCourant;
-				if (presentIdent(tmp_ident) !=0) {
+			case 5 : // Ajout TabSymb VARGLOB/VARLOC
+				if (presentIdent(bc) !=0) {
 					UtilLex.messErr("Erreur : Double déclaration de variable");
 				} else {
-					placeIdent(tmp_ident, VARGLOBALE, tCour, compteurVar);
-					compteurVar++;
+					int tmp_ident = UtilLex.numIdCourant;
+					if(bc == 1 ){
+
+						placeIdent(tmp_ident, VARGLOBALE, tCour, compteurVar);
+						compteurVar++;
+						afftabSymb();
+						System.out.println(tmp_ident);
+					}
+					else{
+						placeIdent(tmp_ident, VARLOCALE, tCour, compteurVar);
+						compteurVar++;
+						afftabSymb();
+						System.out.println(tmp_ident);
+					}
 				}
 				break;
 
 			case 6 : //Actualisation Ident CONST
-				idConst = UtilLex.numIdCourant;
+				//idConst = UtilLex.numIdCourant;
 				break;
 			
 			case 7 : // Ajout TabSymb CONST
-				if (presentIdent(idConst) !=0) {
+				if (presentIdent(bc) !=0) {
+					System.out.println(UtilLex.numIdCourant);
 					UtilLex.messErr("Erreur : Double déclaration de Constante");
 				}
 				else {
+					idConst = UtilLex.numIdCourant;
+					System.out.println(idConst);
 					placeIdent(idConst, CONSTANTE, tCour, vCour);
+					afftabSymb();
 				}
 				break;
 				
@@ -504,7 +519,6 @@ public class PtGen {
 
 			case 39:
 				int ad_temp = pileRep.depiler();
-            	System.out.println(ad_temp);
             	while (ad_temp != 0) {
             	    int temp = po.getElt(ad_temp);
             	    po.modifier(ad_temp, po.getIpo() + 1);
@@ -521,28 +535,21 @@ public class PtGen {
 			case 42 :
 				ident_tmp = presentIdent(bc);
 				compteurVar = 0;
-				if(ident_tmp != 0){
-					if(tabSymb[ident_tmp].categorie != PROC){
-						placeIdent(tabSymb[ident_tmp].code, PROC, NEUTRE, 0); //Tochange later :  first time seen
+				if(ident_tmp == 0){
+						placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo()+3); //Tochange later :  first time seen
 						placeIdent(-1, PRIVEE, NEUTRE, 0); //Tochange later :  fnumber of parfixe + parmode
-					}
-					else {
-						UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
-					}
+						afftabSymb();
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
+				bc = it + 1;
 			break;
 			
 			case 43 :
 				ident_tmp = presentIdent(bc);
-				if(ident_tmp != 0){
-					if(tabSymb[ident_tmp].categorie != PARAMFIXE) {
-						placeIdent(tabSymb[ident_tmp].code, PARAMFIXE, vCour, compteurVar);
-					} else {
-						UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
-					}
-					
+				if(ident_tmp == 0){
+					placeIdent(it, PARAMFIXE, tCour, compteurVar);		
+					afftabSymb();			
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
@@ -551,21 +558,22 @@ public class PtGen {
 
 			case 44 : 
 				ident_tmp = presentIdent(bc);
-				if(ident_tmp != 0){
-					if(tabSymb[ident_tmp].categorie != PARAMFIXE) {
-						placeIdent(tabSymb[ident_tmp].code, PARAMMOD, vCour, compteurVar);
-					} else {
-						UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
-					}
-					
+				if(ident_tmp == 0){
+					placeIdent(it, PARAMMOD, tCour, compteurVar);
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
 				compteurVar++;
 			break;
-			case 45 :
 
+			case 45 :
+				tabSymb[bc-1].info = compteurVar;
 			break;
+
+			case 46 :
+				bc = 1;
+			break;
+
 			case 254 :
 				po.produire(ARRET);
 			break;
