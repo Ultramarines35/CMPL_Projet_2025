@@ -1,3 +1,4 @@
+
 /*********************************************************************************
  * VARIABLES ET METHODES FOURNIES PAR LA CLASSE UtilLex (cf libClass_Projet)     *
  *       complement à l'ANALYSEUR LEXICAL produit par ANTLR                      *
@@ -19,7 +20,6 @@
  *     void afftabSymb()  affiche la table des symboles                          *
  *********************************************************************************/
 
-
 import java.io.*;
 
 /**
@@ -32,49 +32,48 @@ import java.io.*;
  */
 
 public class PtGen {
-    
 
-    // constantes manipulees par le compilateur
-    // ----------------------------------------
+	// constantes manipulees par le compilateur
+	// ----------------------------------------
 
-	private static final int 
-	
+	private static final int
+
 	// taille max de la table des symboles
-	MAXSYMB=300,
+	MAXSYMB = 300,
 
-	// codes MAPILE :
-	RESERVER=1,EMPILER=2,CONTENUG=3,AFFECTERG=4,OU=5,ET=6,NON=7,INF=8,
-	INFEG=9,SUP=10,SUPEG=11,EG=12,DIFF=13,ADD=14,SOUS=15,MUL=16,DIV=17,
-	BSIFAUX=18,BINCOND=19,LIRENT=20,LIREBOOL=21,ECRENT=22,ECRBOOL=23,
-	ARRET=24,EMPILERADG=25,EMPILERADL=26,CONTENUL=27,AFFECTERL=28,
-	APPEL=29,RETOUR=30,
+			// codes MAPILE :
+			RESERVER = 1, EMPILER = 2, CONTENUG = 3, AFFECTERG = 4, OU = 5, ET = 6, NON = 7, INF = 8,
+			INFEG = 9, SUP = 10, SUPEG = 11, EG = 12, DIFF = 13, ADD = 14, SOUS = 15, MUL = 16, DIV = 17,
+			BSIFAUX = 18, BINCOND = 19, LIRENT = 20, LIREBOOL = 21, ECRENT = 22, ECRBOOL = 23,
+			ARRET = 24, EMPILERADG = 25, EMPILERADL = 26, CONTENUL = 27, AFFECTERL = 28,
+			APPEL = 29, RETOUR = 30,
 
-	// codes des valeurs vrai/faux
-	VRAI=1, FAUX=0,
+			// codes des valeurs vrai/faux
+			VRAI = 1, FAUX = 0,
 
-    // types permis :
-	ENT=1,BOOL=2,NEUTRE=3,
+			// types permis :
+			ENT = 1, BOOL = 2, NEUTRE = 3,
 
-	// categories possibles des identificateurs :
-	CONSTANTE=1,VARGLOBALE=2,VARLOCALE=3,PARAMFIXE=4,PARAMMOD=5,PROC=6,
-	DEF=7,REF=8,PRIVEE=9,
+			// categories possibles des identificateurs :
+			CONSTANTE = 1, VARGLOBALE = 2, VARLOCALE = 3, PARAMFIXE = 4, PARAMMOD = 5, PROC = 6,
+			DEF = 7, REF = 8, PRIVEE = 9,
 
-    //valeurs possible du vecteur de translation 
-    TRANSDON=1,TRANSCODE=2,REFEXT=3;
+			// valeurs possible du vecteur de translation
+			TRANSDON = 1, TRANSCODE = 2, REFEXT = 3;
 
-
-    // utilitaires de controle de type
-    // -------------------------------
-    /**
-     * verification du type entier de l'expression en cours de compilation 
-     * (arret de la compilation sinon)
-     */
+	// utilitaires de controle de type
+	// -------------------------------
+	/**
+	 * verification du type entier de l'expression en cours de compilation
+	 * (arret de la compilation sinon)
+	 */
 	private static void verifEnt() {
 		if (tCour != ENT)
 			UtilLex.messErr("expression entiere attendue");
 	}
+
 	/**
-	 * verification du type booleen de l'expression en cours de compilation 
+	 * verification du type booleen de l'expression en cours de compilation
 	 * (arret de la compilation sinon)
 	 */
 	private static void verifBool() {
@@ -82,61 +81,64 @@ public class PtGen {
 			UtilLex.messErr("expression booleenne attendue");
 	}
 
-    // pile pour gerer les chaines de reprise et les branchements en avant
-    // -------------------------------------------------------------------
+	// pile pour gerer les chaines de reprise et les branchements en avant
+	// -------------------------------------------------------------------
 
-    private static TPileRep pileRep;  
+	private static TPileRep pileRep;
 
+	// production du code objet en memoire
+	// -----------------------------------
 
-    // production du code objet en memoire
-    // -----------------------------------
+	private static ProgObjet po;
 
-    private static ProgObjet po;
-    
-    
-    // COMPILATION SEPAREE 
-    // -------------------
-    //
-    /** 
-     * modification du vecteur de translation associe au code produit 
-     * + incrementation attribut nbTransExt du descripteur
-     *  NB: effectue uniquement si c'est une reference externe ou si on compile un module
-     * @param valeur : TRANSDON, TRANSCODE ou REFEXT
-     */
-    private static void modifVecteurTrans(int valeur) {
+	// COMPILATION SEPAREE
+	// -------------------
+	//
+	/**
+	 * modification du vecteur de translation associe au code produit
+	 * + incrementation attribut nbTransExt du descripteur
+	 * NB: effectue uniquement si c'est une reference externe ou si on compile un
+	 * module
+	 * 
+	 * @param valeur : TRANSDON, TRANSCODE ou REFEXT
+	 */
+	private static void modifVecteurTrans(int valeur) {
 		if (valeur == REFEXT || desc.getUnite().equals("module")) {
 			po.vecteurTrans(valeur);
 			desc.incrNbTansExt();
 		}
-	}    
-    // descripteur associe a un programme objet (compilation separee)
-    private static Descripteur desc;
+	}
 
-     
-    // autres variables fournies
-    // -------------------------
-    
- // MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
-    public static String trinome="DELAPART Jules RECIPON Pierre"; 	//TODO 
-    
-    private static int tCour; // type de l'expression compilee
-    private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
-  
-   
-    // TABLE DES SYMBOLES
-    // ------------------
-    //
-    private static EltTabSymb[] tabSymb = new EltTabSymb[MAXSYMB + 1];
-    
-    // it = indice de remplissage de tabSymb
-    // bc = bloc courant (=1 si le bloc courant est le programme principal)
+	// descripteur associe a un programme objet (compilation separee)
+	private static Descripteur desc;
+
+	// autres variables fournies
+	// -------------------------
+
+	// MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE
+	// LETTRES
+	public static String trinome = "DELAPART Jules RECIPON Pierre"; // TODO
+
+	private static int tCour; // type de l'expression compilee
+	private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
+
+	// TABLE DES SYMBOLES
+	// ------------------
+	//
+	private static EltTabSymb[] tabSymb = new EltTabSymb[MAXSYMB + 1];
+
+	// it = indice de remplissage de tabSymb
+	// bc = bloc courant (=1 si le bloc courant est le programme principal)
 	private static int it, bc;
-	
-	/** 
-	 * utilitaire de recherche de l'ident courant (ayant pour code UtilLex.numIdCourant) dans tabSymb
+
+	/**
+	 * utilitaire de recherche de l'ident courant (ayant pour code
+	 * UtilLex.numIdCourant) dans tabSymb
 	 * 
-	 * @param borneInf : recherche de l'indice it vers borneInf (=1 si recherche dans tout tabSymb)
-	 * @return : indice de l'ident courant (de code UtilLex.numIdCourant) dans tabSymb (O si absence)
+	 * @param borneInf : recherche de l'indice it vers borneInf (=1 si recherche
+	 *                 dans tout tabSymb)
+	 * @return : indice de l'ident courant (de code UtilLex.numIdCourant) dans
+	 *         tabSymb (O si absence)
 	 */
 	private static int presentIdent(int borneInf) {
 		int i = it;
@@ -152,9 +154,10 @@ public class PtGen {
 	 * utilitaire de placement des caracteristiques d'un nouvel ident dans tabSymb
 	 * 
 	 * @param code : UtilLex.numIdCourant de l'ident
-	 * @param cat : categorie de l'ident parmi CONSTANTE, VARGLOBALE, PROC, etc.
+	 * @param cat  : categorie de l'ident parmi CONSTANTE, VARGLOBALE, PROC, etc.
 	 * @param type : ENT, BOOL ou NEUTRE
-	 * @param info : valeur pour une constante, ad d'exécution pour une variable, etc.
+	 * @param info : valeur pour une constante, ad d'exécution pour une variable,
+	 *             etc.
 	 */
 	private static void placeIdent(int code, int cat, int type, int info) {
 		if (it == MAXSYMB)
@@ -164,9 +167,9 @@ public class PtGen {
 	}
 
 	/**
-	 *  utilitaire d'affichage de la table des symboles
+	 * utilitaire d'affichage de la table des symboles
 	 */
-	private static void afftabSymb() { 
+	private static void afftabSymb() {
 		System.out.println("       code           categorie      type    info");
 		System.out.println("      |--------------|--------------|-------|----");
 		for (int i = 1; i <= it; i++) {
@@ -185,7 +188,7 @@ public class PtGen {
 		}
 		System.out.println();
 	}
-    
+
 	static int compteurVar;
 	static int idConst;
 	static int tConst;
@@ -194,79 +197,80 @@ public class PtGen {
 	static int val_tmp;
 	static boolean reserver;
 	static int tmp_boucle;
-		/**
-		 *  initialisations A COMPLETER SI BESOIN
-		 *  -------------------------------------
-		 */
-		public static void initialisations() {
-		
-			// indices de gestion de la table des symboles
-			it = 0;
-			bc = 1;
-			// pile des reprises pour compilation des branchements en avant
-			pileRep = new TPileRep(); 
-			// programme objet = code Mapile de l'unite en cours de compilation
-			po = new ProgObjet();
-			// COMPILATION SEPAREE: desripteur de l'unite en cours de compilation
-			desc = new Descripteur();
-			
-			// initialisation necessaire aux attributs lexicaux
-			UtilLex.initialisation();
-		
-			// initialisation du type de l'expression courante
-			tCour = NEUTRE;
-			tConst = NEUTRE;
-			//TODO si necessaire
-			compteurVar = 0;
-			compteurVar = 0;
-			reserver = false;
-			
-		} // initialisations
-	
-		/**
-		 *  code des points de generation A COMPLETER
-		 *  -----------------------------------------
-		 * @param numGen : numero du point de generation a executer
-		 */
-		public static void pt(int numGen) {
-		
-			switch (numGen) {
+
+	/**
+	 * initialisations A COMPLETER SI BESOIN
+	 * -------------------------------------
+	 */
+	public static void initialisations() {
+
+		// indices de gestion de la table des symboles
+		it = 0;
+		bc = 1;
+		// pile des reprises pour compilation des branchements en avant
+		pileRep = new TPileRep();
+		// programme objet = code Mapile de l'unite en cours de compilation
+		po = new ProgObjet();
+		// COMPILATION SEPAREE: desripteur de l'unite en cours de compilation
+		desc = new Descripteur();
+
+		// initialisation necessaire aux attributs lexicaux
+		UtilLex.initialisation();
+
+		// initialisation du type de l'expression courante
+		tCour = NEUTRE;
+		tConst = NEUTRE;
+		// TODO si necessaire
+		compteurVar = 0;
+		compteurVar = 0;
+		reserver = false;
+
+	} // initialisations
+
+	/**
+	 * code des points de generation A COMPLETER
+	 * -----------------------------------------
+	 * 
+	 * @param numGen : numero du point de generation a executer
+	 */
+	public static void pt(int numGen) {
+
+		switch (numGen) {
 			case 0:
 				initialisations();
 				break;
-			
+
 			// TODO
-	
-			case 1: //Verifier que l element dans la pile est un booleen
+
+			case 1: // Verifier que l element dans la pile est un booleen
 				verifBool();
 				break;
-			
-			case 2 :  // verifier que l element dans la pile est un entier
+
+			case 2: // verifier que l element dans la pile est un entier
 				verifEnt();
 				break;
-			
-			case 3 : // Modification de type : ENT
-				
+
+			case 3: // Modification de type : ENT
+
 				tCour = ENT;
 				break;
-	
-			case 4 : // Modification de type : BOOL
-				tCour = BOOL; 
+
+			case 4: // Modification de type : BOOL
+				tCour = BOOL;
 				break;
-	
-			case 5 : // Ajout TabSymb VARGLOB/VARLOC
-				if (presentIdent(bc) !=0) {
+
+			case 5: // Ajout TabSymb VARGLOB/VARLOC
+				if (presentIdent(bc) != 0) {
 					UtilLex.messErr("Erreur : Double déclaration de variable");
 				} else {
 					int tmp_ident = UtilLex.numIdCourant;
-					if(bc == 1 ){
+					if (bc == 1) {
 
 						placeIdent(tmp_ident, VARGLOBALE, tCour, compteurVar);
 						compteurVar++;
 						afftabSymb();
 						System.out.println(tmp_ident);
-					}
-					else{
+					} else {
 						placeIdent(tmp_ident, VARLOCALE, tCour, compteurVar);
 						compteurVar++;
 						afftabSymb();
@@ -275,146 +279,141 @@ public class PtGen {
 				}
 				break;
 
-			case 6 : //Actualisation Ident CONST
-				//idConst = UtilLex.numIdCourant;
+			case 6: // Actualisation Ident CONST
+				// idConst = UtilLex.numIdCourant;
 				break;
-			
-			case 7 : // Ajout TabSymb CONST
-				if (presentIdent(bc) !=0) {
-					System.out.println(UtilLex.numIdCourant);
+
+			case 7: // Ajout TabSymb CONST
+				// if (presentIdent(bc) !=0) {
+				// System.out.println(UtilLex.numIdCourant);
+				// UtilLex.messErr("Erreur : Double déclaration de Constante");
+				// }
+				// else {
+				// idConst = UtilLex.numIdCourant;
+				// System.out.println(idConst);
+				// placeIdent(idConst, CONSTANTE, tCour, vCour);
+				// afftabSymb();
+				// }
+				if (presentIdent(1) == 0) {
+					placeIdent(UtilLex.numIdCourant, CONSTANTE, tCour, vCour);
+				} else {
 					UtilLex.messErr("Erreur : Double déclaration de Constante");
 				}
-				else {
-					idConst = UtilLex.numIdCourant;
-					System.out.println(idConst);
-					placeIdent(idConst, CONSTANTE, tCour, vCour);
-					afftabSymb();
-				}
 				break;
-				
-			
-			case 8 : //lecture d'une valeur entière positive ou une valeur booléene
+
+			case 8: // lecture d'une valeur entière positive ou une valeur booléene
 				vCour = UtilLex.valEnt;
-			break;
+				break;
 
-			case 9 : //lecture d'un entier négatif
-				vCour = UtilLex.valEnt*(-1);
-			break;
+			case 9: // lecture d'un entier négatif
+				vCour = UtilLex.valEnt * (-1);
+				break;
 
-			case 10 : //Reservation des Variables globales
+			case 10: // Reservation des Variables globales
 				po.produire(RESERVER);
 				po.produire(compteurVar);
-			break;
+				break;
 
-			case 11 : //lecture d'un ident
+			case 11: // lecture d'un ident
 				ident_tmp = presentIdent(bc);
-				if(ident_tmp != 0){
-					if(tabSymb[ident_tmp].categorie == VARGLOBALE){
+				if (ident_tmp != 0) {
+					if (tabSymb[ident_tmp].categorie == VARGLOBALE) {
 						po.produire(CONTENUG);
 
-					}
-					else if(tabSymb[ident_tmp].categorie == CONSTANTE){
+					} else if (tabSymb[ident_tmp].categorie == CONSTANTE) {
 						po.produire(EMPILER);
+					} else {
+						UtilLex.messErr("Erreur de type de Ident : " + tabSymb[ident_tmp].categorie);
 					}
-					else{
-						UtilLex.messErr("Erreur de type de Ident : "+tabSymb[ident_tmp].categorie);
-					}
-					if(tabSymb[ident_tmp].type == ENT){
+					if (tabSymb[ident_tmp].type == ENT) {
 						tCour = ENT;
-					}
-					else if(tabSymb[ident_tmp].type == BOOL){
+					} else if (tabSymb[ident_tmp].type == BOOL) {
 						tCour = BOOL;
-					}
-					else{
+					} else {
 						UtilLex.messErr("Erreur de type de Ident : Type interdit");
 					}
 					ident_tmp = tabSymb[ident_tmp].info;
 					po.produire(ident_tmp);
-				}
-				else{
-					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
-				}
-			break;
-			
-			case 12 : // Production lirent/lirebool (lire)
-				if(tCour == BOOL){
-					po.produire(ECRBOOL);
-				}
-				else if(tCour == ENT){
-					po.produire(ECRENT);
-
-				}
-				else{
+				} else {
 					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
 				}
 				break;
-			
-			case 13 : //Empiler ident pour l'affectation
+
+			case 12: // Production lirent/lirebool (lire)
+				if (tCour == BOOL) {
+					po.produire(ECRBOOL);
+				} else if (tCour == ENT) {
+					po.produire(ECRENT);
+
+				} else {
+					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
+				}
+				break;
+
+			case 13: // Empiler ident pour l'affectation
 				// checker si pas constante et ils sont de meme type
 				affect_ident_tmp = presentIdent(bc);
 				if (affect_ident_tmp != 0) {
-					if(tabSymb[affect_ident_tmp].categorie == VARGLOBALE) {
+					if (tabSymb[affect_ident_tmp].categorie == VARGLOBALE) {
 						tCour = tabSymb[affect_ident_tmp].type;
-					}
-					else{
+					} else {
 						UtilLex.messErr("Erreur : ident n'est pas une variable");
 					}
-				}
-				else {
+				} else {
 					UtilLex.messErr("Erreur : ident n'est pas dans la table");
 				}
 				break;
-		
-			case 14 :
+
+			case 14:
 				po.produire(AFFECTERG);
 				po.produire(tabSymb[affect_ident_tmp].info);
 				break;
 
-			case 15 : 
+			case 15:
 				po.produire(EG);
 				tCour = BOOL;
 				break;
 
-			case 16 : 
+			case 16:
 				po.produire(DIFF);
 				tCour = BOOL;
 				break;
 
-			case 17 : 
+			case 17:
 				po.produire(SUP);
 				tCour = BOOL;
 				break;
 
-			case 18 : 
+			case 18:
 				po.produire(SUPEG);
 				tCour = BOOL;
 				break;
 
-			case 19 : 
+			case 19:
 				po.produire(INF);
 				tCour = BOOL;
 				break;
 
-			case 20 : 
+			case 20:
 				po.produire(INFEG);
 				tCour = BOOL;
 				break;
 
-			case 21 : 
+			case 21:
 				reserver = true;
 				break;
 
-			case 22 : 
+			case 22:
 				po.produire(ADD);
 				tCour = ENT;
 				break;
 
-			case 23: 
+			case 23:
 				po.produire(SOUS);
 				tCour = ENT;
 				break;
 
-			case 24: 
+			case 24:
 				po.produire(MUL);
 				tCour = ENT;
 				break;
@@ -423,189 +422,171 @@ public class PtGen {
 				verifEnt();
 				break;
 
-			case 26: 
+			case 26:
 				po.produire(DIV);
 				tCour = ENT;
 				break;
 
-			case 27: 
+			case 27:
 				po.produire(OU);
 				tCour = BOOL;
 				break;
 
-			case 28: 
+			case 28:
 				po.produire(ET);
 				tCour = BOOL;
 				break;
 
-			case 29: 
+			case 29:
 				po.produire(NON);
 				tCour = BOOL;
 				break;
-			
+
 			case 30:
 				ident_tmp = presentIdent(bc);
-				if(ident_tmp != 0){
-					if(tabSymb[ident_tmp].categorie == VARGLOBALE)
-					{ // Nous devons differencier entre lirent et lirebool
+				if (ident_tmp != 0) {
+					if (tabSymb[ident_tmp].categorie == VARGLOBALE) { // Nous devons differencier entre lirent et
+																		// lirebool
 						if (tabSymb[ident_tmp].type == ENT) {
 							po.produire(LIRENT);
 							po.produire(AFFECTERG);
 							po.produire(tabSymb[ident_tmp].info);
-						}
-						else if (tabSymb[ident_tmp].type == BOOL) {
+						} else if (tabSymb[ident_tmp].type == BOOL) {
 							po.produire(LIREBOOL);
 							po.produire(AFFECTERG);
 							po.produire(tabSymb[ident_tmp].info);
-						}
-						else UtilLex.messErr("Erreur : Type de donnée lu inconnu");	
+						} else
+							UtilLex.messErr("Erreur : Type de donnée lu inconnu");
 
-					} else{
+					} else {
 						UtilLex.messErr("Erreur : (lire) lecture de CONST impossible");
 					}
-				
+
 					tCour = tabSymb[ident_tmp].type;
-				}
-				else{
+				} else {
 					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
 				}
 				break;
 
-			case 31: // Début Si :  mettre bsifaux + empiler pile rep
-				po.produire(BSIFAUX); po.produire(0);
+			case 31: // Début Si : mettre bsifaux + empiler pile rep
+				po.produire(BSIFAUX);
+				po.produire(0);
 				pileRep.empiler(po.getIpo());
 				break;
-			
+
 			case 32: // Avant instr sinon
-				po.produire(BINCOND); po.produire(0);
+				po.produire(BINCOND);
+				po.produire(0);
 				int tmp = po.getIpo();
 				po.modifier(pileRep.depiler(), po.getIpo() + 1);
 				pileRep.empiler(tmp);
 				break;
-			
+
 			case 33: // Résout bincond si y'a alors, sinon résout bsifaux
 				po.modifier(pileRep.depiler(), po.getIpo() + 1);
 				break;
-			
+
 			case 34:
-				po.produire(BSIFAUX); po.produire(0);
+				po.produire(BSIFAUX);
+				po.produire(0);
 				pileRep.empiler(po.getIpo());
-				
+
 				break;
 
 			case 35:
 				tmp_boucle = pileRep.depiler();
-				po.produire(BINCOND); po.produire(tmp_boucle-1);
-				po.modifier(tmp_boucle, po.getIpo() +1);
+				po.produire(BINCOND);
+				po.produire(tmp_boucle - 1);
+				po.modifier(tmp_boucle, po.getIpo() + 1);
 				break;
 
-
-			//36 - 39 COND
+			// 36 - 39 COND
 			case 36:
 				pileRep.empiler(0);
 				break;
 
 			case 37:// Cas BINCOND, on relie le nouveau BINCOND à l'adresse de l'ancien BINCOND
 				po.produire(BINCOND);
-            	po.modifier(pileRep.depiler(), po.getIpo() + 2);
-            	po.produire(pileRep.depiler());
-            	pileRep.empiler(po.getIpo());
-			break;
-			
+				po.modifier(pileRep.depiler(), po.getIpo() + 2);
+				po.produire(pileRep.depiler());
+				pileRep.empiler(po.getIpo());
+				break;
 
 			case 38:
 				po.modifier(pileRep.depiler(), po.getIpo() + 1);
-            break;
+				break;
 
 			case 39:
 				int ad_temp = pileRep.depiler();
-            	while (ad_temp != 0) {
-            	    int temp = po.getElt(ad_temp);
-            	    po.modifier(ad_temp, po.getIpo() + 1);
+				while (ad_temp != 0) {
+					int temp = po.getElt(ad_temp);
+					po.modifier(ad_temp, po.getIpo() + 1);
 					ad_temp = temp;
-            	}
-			break;
-			
-			case 41 :
+				}
+				break;
+
+			case 41:
 				vCour = UtilLex.valEnt;
 				po.produire(EMPILER);
 				po.produire(vCour);
-			break;
+				break;
 
-			case 42 :
+			case 42:
 				ident_tmp = presentIdent(bc);
 				compteurVar = 0;
-				if(ident_tmp == 0){
-						placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo()+3); //Tochange later :  first time seen
-						placeIdent(-1, PRIVEE, NEUTRE, 0); //Tochange later :  fnumber of parfixe + parmode
-						afftabSymb();
+				if (ident_tmp == 0) {
+					placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo() + 3); // Tochange later : first time seen
+					placeIdent(-1, PRIVEE, NEUTRE, 0); // Tochange later : fnumber of parfixe + parmode
+					afftabSymb();
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
 				bc = it + 1;
-			break;
-			
-			case 43 :
+				break;
+
+			case 43:
 				ident_tmp = presentIdent(bc);
-				if(ident_tmp == 0){
-					placeIdent(it, PARAMFIXE, tCour, compteurVar);		
-					afftabSymb();			
+				if (ident_tmp == 0) {
+					placeIdent(it, PARAMFIXE, tCour, compteurVar);
+					afftabSymb();
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
 				compteurVar++;
-			break;
+				break;
 
-			case 44 : 
+			case 44:
 				ident_tmp = presentIdent(bc);
-				if(ident_tmp == 0){
+				if (ident_tmp == 0) {
 					placeIdent(it, PARAMMOD, tCour, compteurVar);
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
 				compteurVar++;
-			break;
+				break;
 
-			case 45 :
-				tabSymb[bc-1].info = compteurVar;
-			break;
+			case 45:
+				tabSymb[bc - 1].info = compteurVar;
+				break;
 
-			case 46 :
+			case 46:
 				bc = 1;
-			break;
+				break;
 
-			case 254 :
+			case 254:
 				po.produire(ARRET);
-			break;
+				break;
 
-			
-
-
-			case 255 : 
+			case 255:
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
 				po.constGen();
 
 				break;
 
-			
 			default:
 				System.out.println("Point de generation non prevu dans votre liste");
 				break;
 
-			}
+		}
 	}
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
- 
