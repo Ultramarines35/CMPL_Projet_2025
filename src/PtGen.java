@@ -186,10 +186,11 @@ public class PtGen {
 			else
 				System.out.println(" " + tabSymb[i]);
 		}
-		System.out.println();
 	}
 
 	static int compteurVar;
+	static int compteurVarLoc;
+	static int compteurPara;
 	static int idConst;
 	static int tConst;
 	static int ident_tmp;
@@ -197,6 +198,7 @@ public class PtGen {
 	static int val_tmp;
 	static boolean reserver;
 	static int tmp_boucle;
+	static int type_affect;
 
 	/**
 	 * initialisations A COMPLETER SI BESOIN
@@ -222,7 +224,8 @@ public class PtGen {
 		tConst = NEUTRE;
 		// TODO si necessaire
 		compteurVar = 0;
-		compteurVar = 0;
+		compteurPara = 0;
+		compteurVarLoc = 0;
 		reserver = false;
 
 	} // initialisations
@@ -269,12 +272,10 @@ public class PtGen {
 						placeIdent(tmp_ident, VARGLOBALE, tCour, compteurVar);
 						compteurVar++;
 						afftabSymb();
-						System.out.println(tmp_ident);
 					} else {
-						placeIdent(tmp_ident, VARLOCALE, tCour, compteurVar);
-						compteurVar++;
+						placeIdent(tmp_ident, VARLOCALE, tCour, compteurPara);
+						compteurPara++;
 						afftabSymb();
-						System.out.println(tmp_ident);
 					}
 				}
 				break;
@@ -317,12 +318,27 @@ public class PtGen {
 			case 11: // lecture d'un ident
 				ident_tmp = presentIdent(bc);
 				if (ident_tmp != 0) {
-					if (tabSymb[ident_tmp].categorie == VARGLOBALE) {
+					//1er partie, on génère de quoi mettre l'ident dans la pile : contenug/contenul/empiler
+					int tmp = tabSymb[ident_tmp].categorie;
+					if (tmp == VARGLOBALE) {
 						po.produire(CONTENUG);
-
-					} else if (tabSymb[ident_tmp].categorie == CONSTANTE) {
+						po.produire(ident_tmp);
+					}
+					else if (tmp == VARLOCALE || tmp == PARAMFIXE) {
+						po.produire(CONTENUL);
+						po.produire(ident_tmp);
+						po.produire(0);
+					}
+					else if (tmp == PARAMMOD) {
+						po.produire(CONTENUL);
+						po.produire(ident_tmp);
+						po.produire(1);
+					}
+					else if (tmp == CONSTANTE) {
 						po.produire(EMPILER);
-					} else {
+						po.produire(ident_tmp);
+					}
+					else {
 						UtilLex.messErr("Erreur de type de Ident : " + tabSymb[ident_tmp].categorie);
 					}
 					if (tabSymb[ident_tmp].type == ENT) {
@@ -333,7 +349,6 @@ public class PtGen {
 						UtilLex.messErr("Erreur de type de Ident : Type interdit");
 					}
 					ident_tmp = tabSymb[ident_tmp].info;
-					po.produire(ident_tmp);
 				} else {
 					UtilLex.messErr("Erreur de type de Ident : Ident inconnu");
 				}
@@ -353,20 +368,41 @@ public class PtGen {
 			case 13: // Empiler ident pour l'affectation
 				// checker si pas constante et ils sont de meme type
 				affect_ident_tmp = presentIdent(bc);
+				type_affect = tabSymb[affect_ident_tmp].categorie;
 				if (affect_ident_tmp != 0) {
-					if (tabSymb[affect_ident_tmp].categorie == VARGLOBALE) {
+					int tmp = tabSymb[affect_ident_tmp].categorie;
+					if (tmp == VARGLOBALE || tmp == VARLOCALE || tmp == PARAMMOD) {
 						tCour = tabSymb[affect_ident_tmp].type;
-					} else {
-						UtilLex.messErr("Erreur : ident n'est pas une variable");
+					}
+					else if(tmp == PROC){
+						
+					}
+					else {
+						UtilLex.messErr("Erreur : AFFOUAPPEL, ident n'est pas une variable ou une procédure");
 					}
 				} else {
-					UtilLex.messErr("Erreur : ident n'est pas dans la table");
+					UtilLex.messErr("Erreur : AFFOUAPPEL, ident n'est pas dans la table");
 				}
 				break;
 
 			case 14:
-				po.produire(AFFECTERG);
-				po.produire(tabSymb[affect_ident_tmp].info);
+				if(type_affect == VARGLOBALE){
+					po.produire(AFFECTERG);
+					po.produire(tabSymb[affect_ident_tmp].info);
+				}
+				else if (type_affect == VARLOCALE){
+					po.produire(AFFECTERL);
+					po.produire(tabSymb[affect_ident_tmp].info);
+					po.produire(0);
+				}
+				else if (type_affect == PARAMMOD){
+					po.produire(AFFECTERL);
+					po.produire(tabSymb[affect_ident_tmp].info);
+					po.produire(1);
+				}
+				else {
+					UtilLex.messErr("Erreur : AFFOUAPPEL, ident n'est ni une varlocale, ni une varglobale ni un paramod");
+				}
 				break;
 
 			case 15:
@@ -533,7 +569,8 @@ public class PtGen {
 
 			case 42:
 				ident_tmp = presentIdent(bc);
-				compteurVar = 0;
+				compteurPara = 0;
+				compteurVarLoc = 0;
 				if (ident_tmp == 0) {
 					placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo() + 3); // Tochange later : first time seen
 					placeIdent(-1, PRIVEE, NEUTRE, 0); // Tochange later : fnumber of parfixe + parmode
@@ -547,31 +584,38 @@ public class PtGen {
 			case 43:
 				ident_tmp = presentIdent(bc);
 				if (ident_tmp == 0) {
-					placeIdent(it, PARAMFIXE, tCour, compteurVar);
+					placeIdent(UtilLex.numIdCourant, PARAMFIXE, tCour, compteurPara);
 					afftabSymb();
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
-				compteurVar++;
+				compteurPara++;
 				break;
 
 			case 44:
 				ident_tmp = presentIdent(bc);
 				if (ident_tmp == 0) {
-					placeIdent(it, PARAMMOD, tCour, compteurVar);
+					placeIdent(UtilLex.numIdCourant, PARAMMOD, tCour, compteurPara);
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
-				compteurVar++;
+				compteurPara++;
 				break;
 
 			case 45:
-				tabSymb[bc - 1].info = compteurVar;
+				tabSymb[bc - 1].info = compteurPara;
 				break;
 
 			case 46:
+				po.produire(RETOUR);
+				po.produire(compteurPara);
 				bc = 1;
 				break;
+
+			case 47:
+			tabSymb[bc].info = compteurPara;
+			compteurPara +=2;
+			break;
 
 			case 254:
 				po.produire(ARRET);
@@ -579,6 +623,7 @@ public class PtGen {
 
 			case 255:
 				afftabSymb(); // affichage de la table des symboles en fin de compilation
+				po.constObj();
 				po.constGen();
 
 				break;
