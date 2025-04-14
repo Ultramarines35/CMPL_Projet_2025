@@ -237,6 +237,7 @@ public class PtGen {
 	 * @param numGen : numero du point de generation a executer
 	 */
 	public static void pt(int numGen) {
+		System.out.println(numGen);
 
 		switch (numGen) {
 			case 0:
@@ -273,8 +274,8 @@ public class PtGen {
 						compteurVar++;
 						afftabSymb();
 					} else {
-						placeIdent(tmp_ident, VARLOCALE, tCour, compteurPara);
-						compteurPara++;
+						placeIdent(tmp_ident, VARLOCALE, tCour, compteurVarLoc);
+						compteurVarLoc++;
 						afftabSymb();
 					}
 				}
@@ -368,14 +369,13 @@ public class PtGen {
 			case 13: // Empiler ident pour l'affectation
 				// checker si pas constante et ils sont de meme type
 				affect_ident_tmp = presentIdent(bc);
-				type_affect = tabSymb[affect_ident_tmp].categorie;
 				if (affect_ident_tmp != 0) {
-					int tmp = tabSymb[affect_ident_tmp].categorie;
-					if (tmp == VARGLOBALE || tmp == VARLOCALE || tmp == PARAMMOD) {
+					type_affect = tabSymb[affect_ident_tmp].categorie;
+					if (type_affect == VARGLOBALE || type_affect == VARLOCALE || type_affect == PARAMMOD) {
 						tCour = tabSymb[affect_ident_tmp].type;
 					}
-					else if(tmp == PROC){
-						
+					else if(type_affect == PROC){
+
 					}
 					else {
 						UtilLex.messErr("Erreur : AFFOUAPPEL, ident n'est pas une variable ou une procédure");
@@ -399,6 +399,8 @@ public class PtGen {
 					po.produire(AFFECTERL);
 					po.produire(tabSymb[affect_ident_tmp].info);
 					po.produire(1);
+				}
+				else if (type_affect == PROC){
 				}
 				else {
 					UtilLex.messErr("Erreur : AFFOUAPPEL, ident n'est ni une varlocale, ni une varglobale ni un paramod");
@@ -572,19 +574,20 @@ public class PtGen {
 				compteurPara = 0;
 				compteurVarLoc = 0;
 				if (ident_tmp == 0) {
+					bc = it + 1;
 					placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo() + 3); // Tochange later : first time seen
 					placeIdent(-1, PRIVEE, NEUTRE, 0); // Tochange later : fnumber of parfixe + parmode
 					afftabSymb();
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
-				bc = it + 1;
 				break;
 
 			case 43:
 				ident_tmp = presentIdent(bc);
 				if (ident_tmp == 0) {
 					placeIdent(UtilLex.numIdCourant, PARAMFIXE, tCour, compteurPara);
+					compteurPara++;
 					afftabSymb();
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
@@ -596,25 +599,39 @@ public class PtGen {
 				ident_tmp = presentIdent(bc);
 				if (ident_tmp == 0) {
 					placeIdent(UtilLex.numIdCourant, PARAMMOD, tCour, compteurPara);
+					compteurPara++;
 				} else {
 					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
 				}
-				compteurPara++;
 				break;
 
-			case 45:
-				tabSymb[bc - 1].info = compteurPara;
+			case 45:// Ajout de l'info du nb de para de la proc dans tabSymb
+				//tabSymb[bc - 1].info = compteurPara;
 				break;
 
-			case 46:
+			case 46:// Nettoyage tabSymb
+				compteurVarLoc -=2;
 				po.produire(RETOUR);
 				po.produire(compteurPara);
-				bc = 1;
-				break;
+				//while (compteurPara > 0) {
+                //    tabSymb[bc].code = -1;
+                //    bc++;
+                //    compteurPara--;
+                //}
+                //it -= compteurVarLoc;
+                compteurVarLoc= 0;
+                bc = 1;
+                break;
 
-			case 47:
-			tabSymb[bc].info = compteurPara;
-			compteurPara +=2;
+			case 47://Saut bp, adr dans le nombre de para et ajout du nombre de para dans tabSymb
+			//tabSymb[bc].info = compteurPara;
+			compteurVarLoc += compteurPara + 2;
+			break;
+
+
+
+			case 48:// Modification bincond pour sauter les procs
+			po.modifier(pileRep.depiler(), po.getIpo()+1);
 			break;
 
 			case 254:
