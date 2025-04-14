@@ -569,63 +569,47 @@ public class PtGen {
 				po.produire(vCour);
 				break;
 
-			case 42:
-				ident_tmp = presentIdent(bc);
-				compteurPara = 0;
-				compteurVarLoc = 0;
-				if (ident_tmp == 0) {
-					bc = it + 1;
-					placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo() + 3); // Tochange later : first time seen
-					placeIdent(-1, PRIVEE, NEUTRE, 0); // Tochange later : fnumber of parfixe + parmode
-					afftabSymb();
-				} else {
-					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
-				}
+			// case 42:
+			// 	ident_tmp = presentIdent(bc);
+			// 	compteurPara = 0;
+			// 	compteurVarLoc = 0;
+			// 	if (ident_tmp == 0) {
+			// 		bc = it + 1;
+			// 		placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo()+3); // Tochange later : first time seen
+			// 		placeIdent(-1, PRIVEE, NEUTRE, 0); // Tochange later : fnumber of parfixe + parmode
+			// 		afftabSymb();
+			// 	} else {
+			// 		UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
+			// 	}
+			// 	break;
+			case 42 : 
+				placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo());
+				placeIdent(-1, PRIVEE, NEUTRE, 0);
+				bc = it + 1;
 				break;
-
-			case 43:
-				ident_tmp = presentIdent(bc);
-				if (ident_tmp == 0) {
-					placeIdent(UtilLex.numIdCourant, PARAMFIXE, tCour, compteurPara);
-					compteurPara++;
-					afftabSymb();
-				} else {
-					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
-				}
-				compteurPara++;
+				case 43: // decproc : parfixe?
+				placeIdent(UtilLex.numIdCourant, PARAMFIXE, tCour, compteurVarLoc);
+				compteurVarLoc++;
 				break;
-
-			case 44:
-				ident_tmp = presentIdent(bc);
-				if (ident_tmp == 0) {
-					placeIdent(UtilLex.numIdCourant, PARAMMOD, tCour, compteurPara);
-					compteurPara++;
-				} else {
-					UtilLex.messErr("Erreur Tabsymb : Cet ident existe déjà");
-				}
+			case 44: // decproc : parmod?
+				placeIdent(UtilLex.numIdCourant, PARAMMOD, tCour, compteurVarLoc);
+				compteurVarLoc++;
 				break;
-
-			case 45:// Ajout de l'info du nb de para de la proc dans tabSymb
-				//tabSymb[bc - 1].info = compteurPara;
+			case 46: // decproc debut
+				
+				tabSymb[bc - 1].info = compteurVarLoc;
 				break;
-
-			case 46:// Nettoyage tabSymb
-				compteurVarLoc -=2;
+			case 45: // decproc fin
 				po.produire(RETOUR);
-				po.produire(compteurPara);
-				//while (compteurPara > 0) {
-                //    tabSymb[bc].code = -1;
-                //    bc++;
-                //    compteurPara--;
-                //}
-                //it -= compteurVarLoc;
-                compteurVarLoc= 0;
-                bc = 1;
-                break;
-
-			case 47://Saut bp, adr dans le nombre de para et ajout du nombre de para dans tabSymb
-			//tabSymb[bc].info = compteurPara;
-			compteurVarLoc += compteurPara + 2;
+				po.produire(compteurVarLoc);
+				while (compteurVarLoc > 0) {
+					tabSymb[bc].code = -1;
+					bc++;
+					compteurVarLoc--;
+				}
+				it -= compteurVarLoc;
+				compteurVarLoc = 0;
+				bc = 1;
 			break;
 
 

@@ -77,7 +77,7 @@ type  : 'ent'  {PtGen.pt(3);}
 decprocs: (decproc ptvg)+
   ;
   
-decproc :  'proc'   ident {PtGen.pt(42);} parfixe? parmod? consts? {PtGen.pt(47);} vars? {PtGen.pt(45);} corps {PtGen.pt(46);}
+decproc :  'proc'  ident {PtGen.pt(42);}  parfixe? parmod?  {PtGen.pt(46);} consts? vars?  corps {PtGen.pt(45);}
   ;
   
 ptvg  : ';'
@@ -87,16 +87,16 @@ ptvg  : ';'
 corps : 'debut' instructions 'fin' {PtGen.pt(254);}
   ;
   
-parfixe: 'fixe' '(' pf ( ';' pf )* ')'
+parfixe: 'fixe' '(' pf ( ';' pf)* ')'
   ;
   
-pf  : type ident {PtGen.pt(43);} ( ',' ident {PtGen.pt(43);} )*
+pf  : type ident {PtGen.pt(43);} ( ',' ident {PtGen.pt(43);} )*  
   ;
 
-parmod  : 'mod'  '(' pm  ( ';' pm  )* ')'
+parmod  : 'mod' '(' pm ( ';' pm)* ')'
   ;
   
-pm  : type ident  {PtGen.pt(44);} ( ',' ident {PtGen.pt(44);} )*
+pm  : type ident {PtGen.pt(44);} ( ',' ident {PtGen.pt(44);} )*
   ;
   
 instructions
